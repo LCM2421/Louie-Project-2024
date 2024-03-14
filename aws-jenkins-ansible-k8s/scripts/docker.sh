@@ -1,5 +1,5 @@
 #!/bin/sh
-
+#Before you run this script you must be a root user
 set -o errexit
 set -o nounset
 IFS=$(printf '\n\t')
