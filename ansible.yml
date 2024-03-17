@@ -1,11 +1,26 @@
 - hosts: all
   become: true
-  tasks: 
-     - name: delete old deployment
-       command: kubectl delete -f /home/ubuntu/Deployment.yml
-     - name: delete old service
-       command: kubectl delete -f /home/ubuntu/Service.yml
-     - name: create new deployment
-       command: kubectl apply -f /home/ubuntu/Deployment.yml
-     - name: create new service
-       command: kubectl apply -f /home/ubuntu/Service.yml
+  tasks:
+    - name: Copy Deployment YAML file to target host
+      copy:
+        src: /home/ubuntu/deployment.yml
+        dest: /home/ubuntu/deployment.yml
+        remote_src: yes
+
+    - name: Copy Service YAML file to target host
+      copy:
+        src: /home/ubuntu/service.yml
+        dest: /home/ubuntu/service.yml
+        remote_src: yes
+
+   # - name: delete old deployment
+   #    command: kubectl delete -f /home/ubuntu/deployment.yml
+       
+   # - name: delete old service
+   #    command: kubectl delete -f /home/ubuntu/service.yml
+
+    - name: Create new deployment
+      command: kubectl apply -f /home/ubuntu/deployment.yml
+
+    - name: Create new service
+      command: kubectl apply -f /home/ubuntu/service.yml

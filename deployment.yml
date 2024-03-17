@@ -4,7 +4,7 @@ metadata:
    name: test-app
 spec:
    replicas: 2
-   selector:      # tells the controller which pods to watch/belong to
+   selector: 
     matchLabels:
      app: test-app
    template:
@@ -14,7 +14,7 @@ spec:
       spec:
        containers:
         - name: test-app
-          image: vikashashoke/pipeline-demo
+          image: louiepython2024/test-pipeline
           imagePullPolicy: Always
           ports:
           - containerPort: 80
