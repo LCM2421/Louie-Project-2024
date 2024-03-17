@@ -1,0 +1,14 @@
+kind: Service                             
+apiVersion: v1
+metadata:
+  name: test-app
+  labels:
+    app: test-app
+spec:
+  ports:
+    - port: 8080                               
+      targetPort: 80                    
+      nodePort: 31280
+  selector:
+    app: test-app                  
+  type: LoadBalancer 
