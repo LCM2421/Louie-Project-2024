@@ -36,7 +36,6 @@ systemctl disable <SERVICE_NAME> - don't start automatically when the system boo
 /usr/lib/systemd/system/<SERVICE_NAME> - where the service stored.
 /usr/lib/systemd/system/<SERVICE_NAME> - to identify which script will run before the service starts. #Sample: systemctl cat <SERVICE_NAME>
 
- 
 ## Switching and Routing ##
 ip link - to list and modify interfaces on the host IP.
 ip addr - to see the IP addresses assigned to those interfaces.
@@ -45,3 +44,22 @@ NOTE: changes made using these commands are only valid until a restart. if you w
 ip route/route - used to view the routing table.
 ip route add <IP_Address_Network/Sub_Network> via <IP_Address_Destination> - used to add entries into the routing table.
 cat /proc/sys/net/ipv4/ip_forward - to check if IP forwarding is enabled on a host. If you are working with a host configured as a router.
+
+## DNS in linux system ##
+cat /etc/hosts - file used in matching an FQDN with the server IP hosting a specific domain.
+cat /etc/resolv.conf - it is commonly used to manage DNS requests on Linux systems.
+different command in /etc/resolv.conf:
+nameserver <DNS_SERVER>- configure nameserver that points to the DNS then query.
+search <departmentA.org> <departmentB.org> - when we query a domain name, the resolver will combine the domain name with the search domain to form a fully qualified domain name (FQDN) for querying.
+sortlist <34.101.0.0/255.255.0.0> - to specify a list of the IP addresses that we want to prioritize in the case where 1 domain name resolves to multiple IP addresses.
+options <timeout:5> - is the duration the resolver will wait for the DNS to resolve before its timeout.
+options <ndots:3> - configures the minimum number of dots a domain name can have, which makes the resolver query it as an absolute domain name.
+options <attempts:5> - set the number of tries the resolver gets to resolve a domain name before it gives up.
+options <rotate> - makes the resolver rotate the list of configured nameservers in a round-robin fashion.
+cat /etc/nsswitch.conf - file specifies the methods to use and the order in which to use them when looking for a certain type of information.
+RECORD TYPES stored in DNS Server:
+A - it stores IP to hostnames that's known.
+AAAA - storing IPV6 to hostnames.
+CNAME - mapping to one name to another name.
+nslookup <SERVER_NAME> - to query a hostname from a DNS server.
+dig <SERVER_NAME> - is a useful tool to test DNS name resolution.
