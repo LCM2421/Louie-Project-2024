@@ -1,0 +1,47 @@
+FYI: I'm using Linux CentOS 
+## Linux CLI Basic ##
+cat - short for cancatenate and displays the contents.	
+cd - change directory.
+ls - list files. 
+ls --help - Guide or options for shortcut key and how they used it.
+touch - create an empty file.
+vi <FILENAME> - Create file with content inside.
+mkdir <DIRECTORY_NAME> - Create a directory.
+mkdir -p <PATH> - Create directory hierarchy.
+cp <FILENAME or FILENAME_PATH> <DESTINATION_PATH> - Copy target file to target directory #SAMPLE: cp $HOME/asia/ph.txt $HOME/asia/china
+cp -r - Copy source directory to target location. #SAMPLE: cp -r $HOME/asia/china $HOME
+rm - Remove target file from target directory.
+rm -r - Remove target directory and its contents.
+pwd - print working directory.
+id - to confirm the identity of a specified Linux user.
+su - to switch user.
+ssh <SERVER_NAME@SERVER_IP> - used to login to other server.
+curl or wget - used to download file over internet #SAMPLE: curl -O https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+cat /etc/*release* - to check what OS is running on your server.
+RPM - means Red Hat Package Manager.
+rpm -qa - to query what installed on your server.
+rpm -i <PACKAGE_NAME> - to install specific package.
+rpm -e <PACKAGE_NAME> - to remove or uninstall the specific package.
+yum install <TOOLS>- to install ansible on your server.
+yum list <TOOLS> - to check the version is installed on your server.
+yum remove -y <TOOLS> - To remove or uninstall specific tools.
+yum --showduplicate list <PACKAGE_NAME> - to listt all version of a package.
+yum install <PACKAGE_NAME>-<VERSION>.<ARCHITECTURE> - Install a specific version of a package. #Sample: sudo yum install ansible-2.8.11-1.el7
+systemctl - to check the status of any systemd service running on dedicated server hosting.
+systemctl status <SERVICE_NAME> - to check the status of the service.
+systemctl start <SERVICE_NAME> - to start the service.
+systemctl stop <SERVICE_NAME> - to stop the service.
+systemctl enable <SERVICE_NAME> - automatically start when the system boots up.
+systemctl disable <SERVICE_NAME> - don't start automatically when the system boots up.
+/usr/lib/systemd/system/<SERVICE_NAME> - where the service stored.
+/usr/lib/systemd/system/<SERVICE_NAME> - to identify which script will run before the service starts. #Sample: systemctl cat <SERVICE_NAME>
+
+ 
+## Switching and Routing ##
+ip link - to list and modify interfaces on the host IP.
+ip addr - to see the IP addresses assigned to those interfaces.
+ip addr add <IP_Address/Sub_Network> dev eth0 - used to set IP addresses on the interfaces.
+NOTE: changes made using these commands are only valid until a restart. if you want to persist these changes, you must set them in the /etc/* network interfaces file
+ip route/route - used to view the routing table.
+ip route add <IP_Address_Network/Sub_Network> via <IP_Address_Destination> - used to add entries into the routing table.
+cat /proc/sys/net/ipv4/ip_forward - to check if IP forwarding is enabled on a host. If you are working with a host configured as a router.
