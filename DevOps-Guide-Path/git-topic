@@ -1,0 +1,45 @@
+### GIT INTRODUCTION
+## GIT is Distributed Version Control System
+
+
+GIT has two reposity types local and remote repositories.
+local repository - is on your own local machine and have direct access to it.
+remote repository - is usually a centralized server.
+sudo yum install -y git - to installed git.
+git --version - to check the version of your git.
+git init - initialize a local git repository into our project folder.
+ls -a - to check the files and also the hidden folder.
+git status - to check the git status and changes you made.
+git add test1.txt - to put it in the staging area.
+git add . - to put all the changes in the staging area.
+git config user.name "YOUR_NAME" - command to know git username.
+git config user.email "YOUR_NAME@test.com" - command to know the email of the user.
+git commit -m "<YOUR_COMMIT_MESSAGE>" - to commit the changes in your local machine. A commit stores a copy of the file in its current state.
+git restore test1.txt - to restore modifed file.
+git rm --force txt2.txt - to remove the file in the staging area.
+git rm --cached txt2.txt - to save on your machine and then remove the file in the staging area.
+echo <IGNORE_FILE> >> .gitignore - to permanently ignore the file we create a file called '.gitignore'.
+git log - shows the information that you need to know about all of the commits. Contains commit hash, Author name, Date committed and the commit message.
+git log --oneline - shows the log commit in oneline.
+git log -n 1 - identify who made the latest commit in the new repository.
+git log --name-only - to shows the logs and the committed files.
+ 
+
+## GIT BRANCHES
+git checkout -b <YOUR_CREATED_BRANCH> - Create a new branch and switch to it.
+git branch - to check or list all the branch on the repository.
+git branch sarah - to create a new branch.
+git checkout <YOUR_BRANCH_NAME> - to switch to an existing branch.
+git branch -d <YOUR_BRANCH_NAME> - to delete a branch.
+git log --graph --decorate - to see previous commit history along with the branch they were committed on.
+git merge <YOUR_CREATED_BRANCH> - to merge the changes in the master branch.
+>two types of git merge:
+- fast-forward merge can happen when the current branch has no extra commits.
+- no-fast-forward merge git creates a new merging commit on the active branch.
+
+
+## GIT INITIALIZING REMOTE REPOSITORIES
+git remote add origin <CONNECTION_URL> - to add the remote repository on your local machine.
+git remote -v - to list all your remote repositories.
+git push origin master - to push the changes on the remote repository branch.
+git clone <SSH_LINK_REPOSITORY> - to clone a specific remote repository.
