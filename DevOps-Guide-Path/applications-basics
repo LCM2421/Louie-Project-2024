@@ -1,0 +1,138 @@
+APPLICATIONS
+Compiled languages compiled and then executed.
+- java
+- c
+- c++
+
+Interpreted are developed and executed.
+- python
+- node.js
+- ruby
+
+## JAVA
+JDK(Java Development Kit) - Install a kit or a set of tools that helps to you develop a Java application. 
+Develop - jdb(Java Debugger tool), javadoc
+Build - javac, jar
+Run - jre(Java Runtime Environment
+ls jdk-13.0.2/bin - where the listed tools in the JDK.
+sudo curl https://download.java.net/java/GA/jdk20/bdc68b4b9cbc4ebcb30745c85038d91d/36/GPL/openjdk-20_linux-x64_bin.tar.gz --output /opt/openjdk-20_linux-x64_bin.tar.gz - to download specific java version
+sudo tar -xf /opt/openjdk-20_linux-x64_bin.tar.gz -C /opt/ - to uncompress or unzip the files you downloaded and store it to /opt/ directory.
+/opt/jdk-20/bin/java -version - to check the version of Java.
+export PATH=$PATH:/opt/jdk-20/bin - to set the path of the variable in this case Java.
+
+SAMPLE Compile code of Java
+1. Develop Source Code.
+public class MyTest {
+  public static void main(String[] args) {
+   System.out.println("Hello World");
+  }
+}
+2. Compile
+javac MyTest.java
+output: MyTest.class
+3. Run
+java MyTest
+output: Hello World
+
+JAR - stand for Java Archive 
+WAR - stand for Web Archive
+jar cf <myjar.jar> <test.class> <test2.class> - sample of compiling in jar.
+java -jar <myjar.jar> - sample running the jar files.
+javadoc -d doc <MyTest.java> - sample code of documenting your applications.
+
+Build tools - can help you to automate the processes.
+SAMPLE tools to automate java applications.
+- Maven
+- Gradle 
+- ANT
+
+javac <test.java> - sample command to compile java application and became Test.class.
+java <test.java> - sample command to run the compiled application.
+javadoc -d doc <test.java> - to document and see an output.
+
+sudo yum install -y yum - to install the apache ant build tool on your server.
+ant -version - to check the ant version installed.
+ant compile jar - to compile and generate jar packages.
+ant - you must be on the directory where build.xml stored sample directory "/opt/ant/".
+
+sudo yum install -y maven - to install maven sample automation tool of java.
+mvn -version - to check the maven version installed.
+NOTE: to check the artifactId go to this directory /opt/maven/my-app/pom.xml on your server. sample command cat pom.xml | grep -i artifactId 
+sudo mvn package - to compile and package the application.
+java -cp /opt/maven/my-app/target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App - sample command to check the output for your main app.
+
+
+## NODE.JS
+curl -sL https://rpm.nodesource.com/setup_13.x | bash - - to download the repository on your server.
+sudo yum install -y nodejs - to install node.js.
+node -v - to check the version of node.js installed on your machine.
+node <add.js> - sample command to run the nodejs codes.
+sample codes in node.js:
+// Returns addition of two numbers
+let add = function (a, b) {
+  return a+b;
+};
+const a = 10, b = 5;
+console.log("Addition : "+ add(a,b));
+
+NPM(Node Package Manager)
+npm -v - to check the version of package manager.
+npm search file - to list the files regarding on npm.
+npm install file - to install the file regarding on npm.
+package.json - sample of metadata of nodejs.
+node -e "console.log(module.paths)" - it will list all the paths node would look at while importing a package.
+sudo npm install file -g - to install a package globally to be available on your system.
+ls /usr/lib/node_modules/npm/node_modules/ - where the common modules stored.
+sample Built-In Modules:
+- fs - to handle filesystem
+- http - to host an HTTP server
+- os - to work with the Operating System.
+- events - to handle events.
+- tls - to implement TLS and SSL.
+- url - to parse URL Strings.
+
+ls /usr/lib/node_modules/ - where the External Modules stored in linux system.
+sample External Modules:
+- express - Fast, unopinionated, minimalist, web framework.
+- react - to create front-end user interfaces.
+- debug - to debug the applications.
+- async - to work with asynchronous JS(JavaScript).
+- lodash - to work with arrays, objects, strings, etc..
+
+
+## PYTHON
+Sample versioning:
+- Python2 - develop from 2000 to 2010.
+- Python3 - develop from 2008 to present.
+
+yum install python2 - to install python2 version.
+yum install python36 - to install python3.6.x version.
+python2 - check the version installed on your machine.
+python3 - check the version installed on your machine.
+exit() - to exit the python environment.
+python2 -v or python3 - to check the version without entering the python VM.
+python2 <main.py> - to run the python codes.
+
+sample codes in python:
+import sys
+
+def print_message():
+   if sys.version_info[0] < 3:
+     print("Hello old World!")
+   else:
+     print("Hello new World!")
+
+if __name__ == '__main__':
+    print_message()
+
+PIP(Python Package Manager)
+pip2 -V - to check the version of pip version 2.
+pip3 -V - to check the version of pip version 3.
+pip install <PACKAGE_NAME> - sample command to install and specify the package name.
+/usr/lib/ or /urs/lib64 - where the pip stored the packages.
+pip show <PACKAGE_NAME> - to show and check the location of your downloaded packages.
+python2 -c "import sys; print(sys.path)" - sample command to list a set of directories of the packages for "PYTHON2 VERSION".
+pip install <PACKAGE1> <PACKAGE2> - to install multiple packages
+pip install -r requirements.txt - to install the packages written in a file and please take note you must specify the stable version will install on your machine.
+pip install <PACKAGE_NAME> --upgrade - to upgrade a specific package on your machine.
+pip uninstall <PACKAGE_NAME> - to remove the a specific package on your machine.
