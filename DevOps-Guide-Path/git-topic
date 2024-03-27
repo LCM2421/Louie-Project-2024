@@ -43,3 +43,13 @@ git remote add origin <CONNECTION_URL> - to add the remote repository on your lo
 git remote -v - to list all your remote repositories.
 git push origin master - to push the changes on the remote repository branch.
 git clone <SSH_LINK_REPOSITORY> - to clone a specific remote repository.
+git fetch origin master - sample command in order to update the origin master branch in our local repo.
+git merge origin/master - sample command to merge master into the local master branch.
+git pull origin master - sample command to fetch and merge the remote changes directly into our local master branch.
+git branch -a - to view all the branches in both local and remote
+Sample error when I trying to push the changes in the master branch.
+! [rejected]        master -> master (fetch first)
+to resolve this you must you "git pull origin master".
+git log origin/master - sample command to check the log in the master branch.
+How to fork a sample project
+Go to <SAMPLE_REPO> repo and click on fork button.
