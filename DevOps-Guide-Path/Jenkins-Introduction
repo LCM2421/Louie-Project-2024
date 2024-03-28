@@ -27,6 +27,7 @@ sudo systemctl status jenkins - to check if jenkins server is running.
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword - where the initial password secret of jenkins server.
 #Download jenkins CLI libraries.
 wget http://<YOUR_JENKINS_SERVER:<PORT>/jnlpjars/jenkins-cli.jar
+java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth <USER>:<API_TOKEN> - this command is to authenticate your machine on your jenkins.
 java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket list-jobs - this command is to list all jobs in your jenkins.
 java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket build <NAME_OF_JOBS> - this command is to run the jenkins job. 
 
