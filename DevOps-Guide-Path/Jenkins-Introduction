@@ -1,0 +1,38 @@
+## Jenkins Introduction
+
+In this Introduction we'll be deploying the go-web-app-sample in github repository and explore the repository along the way.
+
+First is to clone the repository.
+git clone https://github.com/kodekloudhub/go-webapp-sample.git
+
+go run main.go & - this command run a program name main.go and the '&' command tells the shell to run the command in the background.
+
+after you run the script you can visit the application in your localhost(i.e: http://localhost:8090).
+Username: test
+Password: test
+
+---
+CI/CD(Continuous Delivery/Deployment) - is a way to take code, package it up and deploy it to a system. The system could be serverless, like a lambda function or an Azure function, could be a VM or an easy instance. It could be some container running somewhere with Docker or etc.
+
+# Install jenkins on a cloud VM.
+Jenkins is an Automation Server. Pre-requisite installing jenkins is java.
+sudo yum install epel-release -y - to update the library of your server.
+sudo yum install java-11-openjdk -y - to install OpenJDK 11 Java Development Kit(JDK) on a system using yum package manager.
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo --no-check-certificate - This allows your system to access Jenkins packages for installation and updates using the yum package manager.
+sudo rpm --import http://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key - This ensures that your system can verify the authenticity of Jenkins packages before installing them.
+sudo yum install jenkins -y - to install jenkins.
+sudo vi /lib/systemd/system/jenkins.service - where you can edit the jenkins port and its located in 'Environment="JENKINS_PORT=8080".
+sudo systemctl start jenkins - to start the server of jenkins.
+sudo systemctl status jenkins - to check if jenkins server is running.
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword - where the initial password secret of jenkins server.
+#Download jenkins CLI libraries.
+wget http://<YOUR_JENKINS_SERVER:<PORT>/jnlpjars/jenkins-cli.jar
+java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket list-jobs - this command is to list all jobs in your jenkins.
+java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket build <NAME_OF_JOBS> - this command is to run the jenkins pipeline. 
+
+curl -Lv http://localhost:8085/login 2>&1 | grep -i 'x-ssh-endpoint' - to find out the port in use in your Jenkins.
+ssh -i /home/mike/.ssh/jenkins_key -l test -p 8022 jenkins-server help - see below what this command do:
+-i flag is used to point to test's private SSH key. Remember, we have already added the public key in the Jenkins configuration.
+-l is the login user which in our example is test.
+-p is the port which we found out in the previous step to be 8022.
+ssh -i /home/mike/.ssh/jenkins_key -l mike -p 8022 jenkins-server safe-restart - this command is to restart safely the jenkins server from the CLI.
