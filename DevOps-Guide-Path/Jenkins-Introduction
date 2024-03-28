@@ -28,7 +28,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword - where the initial passw
 #Download jenkins CLI libraries.
 wget http://<YOUR_JENKINS_SERVER:<PORT>/jnlpjars/jenkins-cli.jar
 java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket list-jobs - this command is to list all jobs in your jenkins.
-java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket build <NAME_OF_JOBS> - this command is to run the jenkins pipeline. 
+java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket build <NAME_OF_JOBS> - this command is to run the jenkins job. 
 
 curl -Lv http://localhost:8085/login 2>&1 | grep -i 'x-ssh-endpoint' - to find out the port in use in your Jenkins.
 ssh -i /home/mike/.ssh/jenkins_key -l test -p 8022 jenkins-server help - see below what this command do:
