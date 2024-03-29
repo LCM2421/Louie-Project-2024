@@ -37,3 +37,40 @@ ssh -i /home/test/.ssh/jenkins_key -l test -p 8022 jenkins-server help - see bel
 -l is the login user which in our example is test.
 -p is the port which we found out in the previous step to be 8022.
 ssh -i /home/test/.ssh/jenkins_key -l test -p 8022 jenkins-server safe-restart - this command is to restart safely the jenkins server from the CLI.
+
+# Systems Administration with jenkins
+which files to backup?
+- $JENKINS_HOME - where all related to jenkins are stored in your system and also the most important to backup.
+- Configuration files(config.xml)*DIRECTORY_FOLDER* - where the configuration of jenkins stored and how you setup your environment.
+- jobs *DIRECTORY_FOLDER* - where the jobs or pipeline stored and everything that you use to deploy.
+
+* Creating a backup
+- Filesystem snapshot, Plugins for backup and write a shell script that backs up the jenkins instance.
+In my opinion, we should backup our plugin and how to do that, navigate to 'Manage Jenkins > Manage Plugins > and then under available search backup and look for ThinBackup, why ThinkBackup this plugins is the most important global and job specific configuration files, NOTES: you must config the backup settings to this plugins and set the Backup Directory(Go to your direction and change the permission like chmod 777 <YOUR_CREATED_DIRECTORY>.
+
+* Restoring your created backup
+In ThinBackup tools there's a Restore Options you can restore any files that you backup earlier then check restore plugins.
+
+# Pipelines
+Sample jenkinsFile or the pipeline script.
+pipeline { -> The task your are trying to accomplish.
+    agent any -> this is the Build Agent.
+
+    stages { -> this is the stages when you are testing and deploying.
+        stage('Build') { -> this is the steps.
+	    steps {
+                echo 'Building.. '
+	    }
+	}
+        stage('Test') {
+	    steps {
+                echo 'Testing.. '
+	    }
+	}
+        stage('Deploy') {
+	    steps {
+                echo 'Deploying.. '
+	    }
+	}
+     }
+}
