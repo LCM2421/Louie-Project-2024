@@ -32,8 +32,8 @@ java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<AP
 java -jar jenkins-cli.jar -s http://<YOUR_JENKINS_SERVER>:<PORT>/ -auth test:<API_TOKEN> -websocket build <NAME_OF_JOBS> - this command is to run the jenkins job. 
 
 curl -Lv http://localhost:8085/login 2>&1 | grep -i 'x-ssh-endpoint' - to find out the port in use in your Jenkins.
-ssh -i /home/mike/.ssh/jenkins_key -l test -p 8022 jenkins-server help - see below what this command do:
+ssh -i /home/test/.ssh/jenkins_key -l test -p 8022 jenkins-server help - see below what this command do:
 -i flag is used to point to test's private SSH key. Remember, we have already added the public key in the Jenkins configuration.
 -l is the login user which in our example is test.
 -p is the port which we found out in the previous step to be 8022.
-ssh -i /home/mike/.ssh/jenkins_key -l mike -p 8022 jenkins-server safe-restart - this command is to restart safely the jenkins server from the CLI.
+ssh -i /home/test/.ssh/jenkins_key -l test -p 8022 jenkins-server safe-restart - this command is to restart safely the jenkins server from the CLI.
