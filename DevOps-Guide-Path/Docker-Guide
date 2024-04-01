@@ -1,0 +1,15 @@
+## Docker Command
+# before using the below command is a must that the docker is installed in your system.
+How to install it go to this website -> https://docs.docker.com/get-docker/
+docker ps - this command is to list all containers running.
+docker ps -a - this command will list all running as well as previously stopped or exited containers.
+docker stop <CONTAINER_NAME> - this command is to stopped specific running container.
+docker rm <CONTAINER_NAME> - this command is to remove, stopped or exited container permanently.
+docker images - this command is to list available images and their sizes on your host.
+docker rmi <IMAGE_NAME> - this command is to remove image, but you must ensure that no containers are running off on that image before attempting to remove.
+docker run <IMAGE_NAME> - this command is to run an image.
+docker pull <IMAGE_NAME> - this command is to only pull the image and don't run the image.
+docker exec <CONTAINER_NAME> cat /etc/hosts - command to execute a command on docker container.
+docker run <IMAGE_NAME>AND_OR<kodekloud/simple-webapp> - command runs in the foreground or in an attached mode.
+docker run -d <IMAGE_NAME> - command runs in the background mode.
+docker attach <CONTAINER_ID> - command to specify and accessing the UI of the web server.
