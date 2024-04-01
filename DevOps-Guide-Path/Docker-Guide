@@ -13,4 +13,3 @@ docker exec <CONTAINER_NAME> cat /etc/hosts - command to execute a command on do
 docker run <IMAGE_NAME>AND_OR<kodekloud/simple-webapp> - command runs in the foreground or in an attached mode.
 docker run -d <IMAGE_NAME> - command runs in the background mode.
 docker attach <CONTAINER_ID> - command to specify and accessing the UI of the web server.
-docker rmi <
