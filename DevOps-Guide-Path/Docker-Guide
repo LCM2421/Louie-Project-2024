@@ -9,7 +9,7 @@ docker images - this command is to list available images and their sizes on your
 docker rmi <REPOSITORY_NAME> - this command is to remove image, but you must ensure that no containers are running off on that image before attempting to remove.
 docker run <IMAGE_NAME> - this command is to run an image.
 docker pull <IMAGE_NAME> - this command is to only pull the image and don't run the image.
-docker exec <CONTAINER_NAME> cat /etc/hosts - command to execute a command on docker container.
+docker exec <CONTAINER_ID> cat /etc/hosts - command to execute a command on docker container.
 docker run <IMAGE_NAME>AND_OR<kodekloud/simple-webapp> - command runs in the foreground or in an attached mode.
 docker run -d <IMAGE_NAME> - command runs in the background mode.
 docker attach <CONTAINER_ID> - command to specify and accessing the UI of the web server.
