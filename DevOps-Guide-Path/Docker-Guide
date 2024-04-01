@@ -6,10 +6,11 @@ docker ps -a - this command will list all running as well as previously stopped 
 docker stop <CONTAINER_NAME> - this command is to stopped specific running container.
 docker rm <CONTAINER_NAME> - this command is to remove, stopped or exited container permanently.
 docker images - this command is to list available images and their sizes on your host.
-docker rmi <IMAGE_NAME> - this command is to remove image, but you must ensure that no containers are running off on that image before attempting to remove.
+docker rmi <REPOSITORY_NAME> - this command is to remove image, but you must ensure that no containers are running off on that image before attempting to remove.
 docker run <IMAGE_NAME> - this command is to run an image.
 docker pull <IMAGE_NAME> - this command is to only pull the image and don't run the image.
 docker exec <CONTAINER_NAME> cat /etc/hosts - command to execute a command on docker container.
 docker run <IMAGE_NAME>AND_OR<kodekloud/simple-webapp> - command runs in the foreground or in an attached mode.
 docker run -d <IMAGE_NAME> - command runs in the background mode.
 docker attach <CONTAINER_ID> - command to specify and accessing the UI of the web server.
+docker rmi <
