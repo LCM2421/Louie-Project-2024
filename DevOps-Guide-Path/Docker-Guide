@@ -17,3 +17,19 @@ docker stop $(docker ps -aq) - this command is to stop all the containers at onc
 docker rm $(docker ps -aq) - this command is to remove all the stopped containers at once.
 docker rmi $(docker images -aq) - command is to stop and delete all the containers being used by images.
 docker run -d --name webapp nginx:1.14-alpine - this command is to run a specific container and had a name in it.
+
+# Docker run
+* run with tag
+docker run <IMAGE_NAME>:<TAG_NUMBER> - command that specify the tag name of the Image/docker.
+* run with STDIN
+docker run -it <IMAGE_NAME>:<TAG_NUMBER> - command for interactive mode when you want to input something and prints out. "-it" stands for a pseudo terminal.
+* run with Port mapping
+docker run -p <EXPOSED_PORT>:<INTERNAL_HOST> <IMAGE_NAME>:<TAG_NUMBER> - command to exposed and specify port of your docker container.
+* run with Volume mapping
+docker run -v /opt/datadir:/var/lib/mysql mysql - this command is to map and stored the data from /var/lib/mysql to /opt/datadir <- the data gather will store on you local host. 
+* inspect container
+docker inspect <CONTAINER_NAME> or <CONTAINER_ID> - command to see additional details about a specific container, all details return in JSON format.
+* Container logs
+docker logs <CONTAINER_NAME> - command to view the logs of the docker container.
+* other docker run options
+docker run -p 8080:8080 -v /opt/datadir:/var/jenkins_home -u root jenkins - this command runs a Docker container on port(-p) 8080, stores(-v) the data in /opt/datadir, and specifies the user(-u).
