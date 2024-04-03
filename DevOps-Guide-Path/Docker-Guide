@@ -42,7 +42,7 @@ docker run -p 8080:8080 -v /opt/datadir:/var/jenkins_home -u root jenkins - this
 4. Install Python dependencies using pip.
 5. Copy source code to /opt folder.
 6. Run the web server using "flash" command.
-* now create a Dockerfile has two stages the capital letter called as instruction and followed by the argument.
+* now create a Dockerfile - Dockerfile have two stages the capital letter called as instruction and followed by the argument.
 FROM Ubuntu
 
 RUN apt-get update
