@@ -33,3 +33,44 @@ docker inspect <CONTAINER_NAME> or <CONTAINER_ID> - command to see additional de
 docker logs <CONTAINER_NAME> - command to view the logs of the docker container.
 * other docker run options
 docker run -p 8080:8080 -v /opt/datadir:/var/jenkins_home -u root jenkins - this command runs a Docker container on port(-p) 8080, stores(-v) the data in /opt/datadir, and specifies the user(-u).
+
+# Docker images
+* How to create your own image?
+1. OS - what operating system you'll be using for example Ubuntu.
+2. Update apt repo.
+3. Install dependencies using apt.
+4. Install Python dependencies using pip.
+5. Copy source code to /opt folder.
+6. Run the web server using "flash" command.
+* now create a Dockerfile has two stages the capital letter called as instruction and followed by the argument.
+FROM Ubuntu
+
+RUN apt-get update
+RUN apt-get install python
+
+RUN pip install flask
+RUN pip install flask-mysql
+
+COPY <APP_NAME> /opt/source-code
+
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+
+docker build Dockerfile -t <IMAGE_NAME>'or'<DOCKERHUB_ACCT>:<TAG_NAME> - this command is building an image locally on your system.
+NOTE: before pushing an image to Dockerhub you must be logged in first to you local machine.
+docker push <DOCKERHUB_ACCT>:<TAG_NAME> - this command is push your created image to make it available on the Public Docker Hub Registry.
+docker history <IMAGE_NAME> - this command is to view the history when you are building an image.
+
+# CMD vs Entrypoint
+CMD command param1		CMD sleep 5
+CMD ["command", "param1"]	CMD ["sleep", "5"]
+NOTE: the command and its parameters should be seperate elements in the list.
+docker run ubuntu-sleeper sleep 10 - this command append the data sleep on the docker container and change it to 10 seconds.
+sample in ENTRYPOINT
+FROM Ubuntu
+ENTRYPOINT ["sleep"]
+CMD["5"]
+docker run ubuntu-sleeper 10 - this code is to overide and pass the parameters in the entrypoint. 
+
+# ENV varaibles in Docker
+docker run -e APP_COLOR=blue simple-webapp-color - this command is to set the environment of your docker container.
+docker run -it <IMAGE_NAME> bash - this command runs the container and connects me into that particular container and as soon as I exit the container is going to stop.
