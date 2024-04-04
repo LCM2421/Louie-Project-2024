@@ -74,3 +74,34 @@ docker run ubuntu-sleeper 10 - this code is to overide and pass the parameters i
 # ENV varaibles in Docker
 docker run -e APP_COLOR=blue simple-webapp-color - this command is to set the environment of your docker container.
 docker run -it <IMAGE_NAME> bash - this command runs the container and connects me into that particular container and as soon as I exit the container is going to stop.
+
+# Docker Engine Storage and Networking
+Docker engine - when you are installing docker on a linux host, there are three different components that docker have the Docker Daemon, The REST API and the Docker CLI.
+Docker Daemon - is a background process that manages Docker objects such as the images, containers, volume and networks.
+Docker REST API server - is the API interface that programs can use to talk to the daemon and provide instructions.
+Docker CLI - is nothing but the command line interface that we've been using to perform actions such as running a containers, stopping containers, detroying images, etc. It uses the REST API to interact with the docker daemon.
+SAMPLE Command:
+docker -H=remote-docker-engine::2375
+docker -H=10.123.2.1:2375 run nginx
+
+# Containerization
+Docker uses namespaces to isolate workspace, process IDs, Network Inter Process, communication mounts and Unix timesharing systems are created in their own namespace.
+
+# cgroups - control groups to restrict the amount of hardware resources allocated to each container.
+docker run --cpus=.5 ubuntu - this command ensure that the container does not take up more than 50% of the host CPU at any given time.
+docker run --memory= 100m ubuntu - this command is to set the value of 100MB to limits the amount of memory that container can use.
+
+# Docker File system
+/var/lib/docker - where docker stored all its data and create multiple folders called AUFS(Union Filesystem) Containers, containers, image and volumes.
+
+# Docker networking - Docker creates three networks automatically, Bridge, NONE and HOST.
+Sample command using the docker networking
+docker run ubuntu - automatically on the bridge network. Bridge network is a private internal network created by the Docker host, IP address usually in a range of 172.17.0.x 
+docker run ubuntu --network=none - set docker container network to none. The containers aren't attached to any network and doesn't have any access to the external network.
+docker run ubuntu --network=host - set docker container network to host. If you were to run a web server on Port 5000 in a web app container, it is automatically as accessible on the same port externally without requiring any port mapping as the web container uses the host's network.
+
+docker network ls - this command is to explore the current setup and identify the number of networks that exist on your system.
+docker network inspect bridge - this command is to view the subnet configuration on bridge network.
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network - this command will create a new network named 'wp-mysql-network' using the bridge driver with allocate subnet 182.18.0.1/24 and the will configure gateway 182.18.0.1 .
+docker network inspect wp-mysql-network - this command will check the configuration of wp-mysql-network.
+docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db --network wp-mysql-network mysql:5.6 - this command will deploy a mysql database using the newly created network.
