@@ -1,0 +1,42 @@
+## Kubernetes Overview
+To understand kubernetes(k8s) we must first understand two things like containerization and orchestration.
+Container orchestration - the platform needs needs to orchestrate the connectivity between the containers and automatically scale up or down based on the load. This whole process of automatically deploying and managing containers is known as container orchestration.
+
+# K8s architecture
+Nodes or Minions - a node is a machine, physical or virtual, on which kubernetes is installed. A node is a worker machine, and that is where containers will be launched by k8s.
+Cluster - a cluster is a set of nodes grouped together. This way even if one node fails, you have your application still accessible from the other nodes. Moreover, having multiple nodes helps in sharing load as well.
+Master - master is another node with k8s installed in it and is configured as a master. The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes.
+Components of k8s - API Server, ETCD, kubelet, container runtime, controllers, and scheduler.
+API Server - acts as the front end for k8s. The users, management devices, CLI all talk to the API server to interact with the k8s cluster.
+ETCD - is a distributed reliable key value store used by k8s to store all data used to manage the cluster. ETCD is responsible for implementing logs within the cluster to ensure that there are no conflicts between the masters.
+Kubelet - is the agent that runs on each node in the cluster.The agent is responsible for making sure that the containers are running on the nodes as expected.
+Container Runtime - is the underlying software that is used to run containers, for example Docker, but there are other options as well.
+Controllers - are the brain behind orchestration. They are responsible for noticing and responding when nodes, containers or endpoints goes down. The controllers make decisions to bring up new containers in such cases.
+Scheduler - is responsible for distributing work or containers across multiple nodes. It looks for newly created containers and assigns them to nodes.
+kubectl - the kubectl tool is used to deploy and manage applications on a k8s cluster, to get cluster information, to get the status of other nodes in the cluster and to manage many other things.
+* Sample command in the terminal.
+kubectl run hello-minikube - this command is used to deploy an application on the cluster name hello-minikube.
+kubectl cluster-info - this command is used to view information about the cluster.
+kubectl get nodes - this command is used to list all the nodes that part of the cluster.
+
+# k8s setup
+Minikube or Microk8s - these are solutions for developers or those who want to just play around and learn k8s.
+Kubeadm - the kubeadm tool is used to bootstrap and manage production grade k8s clusters.
+
+# Installation and set up the kubectl tool:
+Install and set up the kubectl tool: –
+https://kubernetes.io/docs/tasks/tools/
+
+Install Minikube: –
+https://minikube.sigs.k8s.io/docs/start/
+
+Install VirtualBox: –
+https://www.virtualbox.org/wiki/Downloads
+https://www.virtualbox.org/wiki/Linux_Downloads
+
+Minikube Tutorial: –
+https://kubernetes.io/docs/tutorials/hello-minikube/
+
+If the minikube installation has been done on the Linux, then to access the URL on the local browser, we need to do a few steps to get the service URL to work. Those steps are covered on this documentation page: –
+
+https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel
