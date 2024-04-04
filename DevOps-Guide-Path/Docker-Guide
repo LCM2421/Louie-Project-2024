@@ -105,3 +105,17 @@ docker network inspect bridge - this command is to view the subnet configuration
 docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network - this command will create a new network named 'wp-mysql-network' using the bridge driver with allocate subnet 182.18.0.1/24 and the will configure gateway 182.18.0.1 .
 docker network inspect wp-mysql-network - this command will check the configuration of wp-mysql-network.
 docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db --network wp-mysql-network mysql:5.6 - this command will deploy a mysql database using the newly created network.
+
+# Docker registry - its the central repository of all Docker images.
+sample registry in image: nginx(<- this is the User/Account)/nginx(<- this is image/repository)
+
+# Private registry
+docker login private-registry.io - this command is to login on your private repository in Docker Hub.
+docker run private-registry.oi/apps/internal-app <- sample running a private docker container.
+
+# Deploy Private Registry
+docker run -d -p 5000:5000 --name registry registry:2 - sample command that the name of the image is registry and it exposes the API on Port 5000.
+docker image tag my-image localhost:5000/my-image - this command is to tag the image with a private registry URL in it.
+docker push localhost:5000/my-image - this command is to push the image to my local private registry.
+docker pull localhost:5000/my-image - this command is to pull the image on your local machine.
+docker pull 192.168.56.100:5000/my-image - this command is to pull the image using the IP on the other environment.
