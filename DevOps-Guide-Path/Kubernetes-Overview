@@ -40,3 +40,15 @@ https://kubernetes.io/docs/tutorials/hello-minikube/
 If the minikube installation has been done on the Linux, then to access the URL on the local browser, we need to do a few steps to get the service URL to work. Those steps are covered on this documentation page: –
 
 https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel
+
+# k8s Concepts
+Pod - is the most basic and the smallest unit in k8s.
+A note about creating pods using kubectl run.
+To create a pod from the command line, use the command:
+Create an NGINX Pod
+kubectl run nginx --image=nginx
+As of version 1.18, kubectl run (without any arguments such as --generator ) will create a pod instead of a deployment.
+To create a deployment using imperative command, use kubectl create:
+kubectl create deployment nginx --image=nginx
+Kubernetes Concepts - https://kubernetes.io/docs/concepts/
+Pod Overview- https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
