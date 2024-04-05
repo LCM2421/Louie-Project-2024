@@ -1,0 +1,50 @@
+# YAML Intro
+YAML - is a human-readable data serialization language that is often used for writing configuration files.
+Dictionary is equal to unordered.
+List is equal to ordered.
+Hash or # means comments in the codes.
+
+key value pair yaml - must have a space followed by a colon differentiating the key and the value.
+Sample data structures:
+Fruit: Apple
+Vegetable: Carrot
+Liquid: Water
+Meat: Chicken
+
+Array/Lists yaml - the dash indicates that it's an element of an array.
+Sample data structures:
+Fruits:
+-   Orange
+-   Apple
+-   Banana
+
+Vegetables:
+-   Carrot
+-   Cauliflower
+-   Tomato
+
+Dictionary/Map - is a set of properties grouped together under an item.
+Sample data structures:
+Banana:
+    Calories: 105
+    Fat: 0.4 g
+    Carbs: 27 g
+
+Grapes:
+    Calories: 62
+    Fat: 0.3 g
+    Carbs: 16 g
+
+Sample data structures of List Of Dictionaries:
+-   Color: Blue
+    Model:
+        Name: Corvette
+        Model: 1995
+    Transmission: Manual
+    Price: $20,000
+-   Color: Grey
+    Model:
+        Name: Corvette
+        Model: 1995
+    Transmission: Manual
+    Price: $22,000
