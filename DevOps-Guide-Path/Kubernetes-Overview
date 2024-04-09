@@ -52,3 +52,31 @@ To create a deployment using imperative command, use kubectl create:
 kubectl create deployment nginx --image=nginx
 Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 Pod Overview- https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
+
+# K8s Concepts - PODs, ReplicaSets, Deployments.,
+* A k8s definition file always contains four top level fields.
+1. apiVersion: - is the version of the k8s API we are using to create the object. Example version is v1 and the other possible values for this field are apps/v1, apiVersion is a form of a String.
+2. kind: - refers to the type of object we are trying to create. For example Pod other possible values here could be replica set or deployment or service, kind is a form of a String.
+3. metadata: - is data about the object, like its name, labels, etc., metadata is a form of a dictionary.
+4. spec: - this is where we would provide additional information to k8s pertaining to that object. spec is a form of a dictionary.
+
+pod-definition.yml
+# this is the sample yaml file that will create a single pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+
+kubectl create/apply -f pod-definition.yaml - this command is to create a sample pod.
+kubectl get pod - command to list all the pods running on your machine.
+kubectl describe pod <POD_NAME> - command is to get a much more in depth information about the pod.
+kubectl run redis --image=redis123 --dry-run=client -o yaml > redis-definition.yaml - this command is to automatically create a manifest file and create a filename call redis-definition.yaml.
+
+YAML tips - is to install Microsoft Visual Studio Code IDE.
