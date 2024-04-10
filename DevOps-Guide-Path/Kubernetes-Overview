@@ -41,6 +41,7 @@ If the minikube installation has been done on the Linux, then to access the URL 
 
 https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel
 
+# POD
 # k8s Concepts
 Pod - is the most basic and the smallest unit in k8s.
 A note about creating pods using kubectl run.
@@ -78,5 +79,74 @@ kubectl create/apply -f pod-definition.yaml - this command is to create a sample
 kubectl get pod - command to list all the pods running on your machine.
 kubectl describe pod <POD_NAME> - command is to get a much more in depth information about the pod.
 kubectl run redis --image=redis123 --dry-run=client -o yaml > redis-definition.yaml - this command is to automatically create a manifest file and create a filename call redis-definition.yaml.
+
+# ReplicaSet
+Replication Controller - is the older technology that is being replaced by replica set.
+Replica Set - is the new recommended way to set up replication. In the ReplicaSet file, there are three important sections the template, replicas and selector. 
+* sample yaml file for replication controller.
+rc-definition.yml
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: frontPOD
+    spec:
+      containers:
+      - name: nginx-controller
+        image: nginx
+
+  replicas: 3
+
+kubectl get replicationcontroller - command to view the list of created replication controllers.
+
+* sample yaml file for replicaset. ReplicaSet has a selector.
+replicaset-definition.yml
+apiVersion: v1
+kind: ReplicaSet
+metadata: 
+  name: myapp-rep
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: frontPOD
+    spec:
+      containers:
+      - name: nginx-controller
+        image: nginx
+
+  replicas: 3
+  selector:
+    matchLabels:
+      type: frontPOD
+
+kubectl get replicaset - command to view the created replicaset.
+
+# definition of Labels and Selectors.
+Why do we label or pods and objects in k8s?
+Sample scenario:
+We deployed 3 intances of our front end web app as 3 parts and then we would like to create a replication controller or replica set to ensure that we have 3 active PODS at any time. And yes, this is one of the use case of replica sets. You can use it to monitor existing parts, in case they weren't created, the replica set will create them for you. The role of the ReplicaSet is to monitor the pods and if any of them were to fail, ReplicaSet deploy new ones. The ReplicaSet is in fact a process that monitors the PODs.
+
+This is where labeling our PODs during creation comes in handy. We could now provide theses labels as a filter for ReplicaSet, under the selector section we use the matchLabels filter and provide the same label that we used while creating the PODs. This way the ReplicaSet knows which parts to monitor. The same concept of labels and selectors is used in many other places throughout k8s.
+
+kubectl replace -f replicaset-definition.yml - this command is to update the configuration of your ReplicaSet.
+kubectl scale --replicas=6 -f replicaset-definition.yml - command to scale the ReplicaSet to 6 from the manifest file.
+kubectl delete replicaset myapp-replicaset - this command is to delete ReplicaSet and also deletes all underlying PODs.
+kubectl api-resources | grep replicaset - this command is to check the apiVersion of ReplicaSet.
+kubectl explain replicaset | grep VERSION - this command is to explain and filter only the version of ReplicaSet.
 
 YAML tips - is to install Microsoft Visual Studio Code IDE.
