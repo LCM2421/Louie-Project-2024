@@ -188,3 +188,9 @@ kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1 - commands to se
 kubectl rollout status deployment/myapp-deployment - commands to check the status of new rollout deployment version.
 kubectl rollout undo deployment/my-app-deployment - commands to detroy the PODs in the new ReplicaSet and bring the older ones up in the old ReplicaSet and your apps, is back to its older format.
 kubectl rollout history deployment/myapp-deployment - commands to show the revisions and history of our deployment.
+
+# Networking in k8s
+* in k8s IP address is assigned to a POD, when k8s is initially configured, we create an internal private network with the address 10.244.0.0 and all the PODs are attached to it.
+* All containers/PODs can communicate to one another without NAT.
+* All nodes can communicate with all containers and vice-versa without NAT.
+* K8s expects us to set up a networking solution that meets these criteria. Fortunately there are multiple pre-built solutions available, some of them are the Cisco ACI Networks, Cilium, big cloud fabric, flannel, VMware nsx-t, and Calico.
