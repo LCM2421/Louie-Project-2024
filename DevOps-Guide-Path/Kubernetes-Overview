@@ -150,3 +150,41 @@ kubectl api-resources | grep replicaset - this command is to check the apiVersio
 kubectl explain replicaset | grep VERSION - this command is to explain and filter only the version of ReplicaSet.
 
 YAML tips - is to install Microsoft Visual Studio Code IDE.
+
+# k8s Deployments
+* sample yaml file for deployment.
+vi deployment-definition.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deploy
+  labels: 
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+      - name: nginx-controller
+        image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+
+kubectl get all - commands to see all the created objects at once.
+
+# Updates and rollback in Deployments.
+* Two types of deployment Strategies.
+1. Recreate strategy - This type of strategy is to take down all your applications and deploy a newer version. For example if you have 3 apps running in your cluster if you use Recreate strategy all your 3 apps will be destroyed and then deploy 3 new versions of your apps.
+2. Rolling Update strategy - this type of strategy are we take down the older version and bring up a newer version 1 by 1.
+
+kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1 - commands to set the image or to update the image version of your deployment.
+kubectl rollout status deployment/myapp-deployment - commands to check the status of new rollout deployment version.
+kubectl rollout undo deployment/my-app-deployment - commands to detroy the PODs in the new ReplicaSet and bring the older ones up in the old ReplicaSet and your apps, is back to its older format.
+kubectl rollout history deployment/myapp-deployment - commands to show the revisions and history of our deployment.
