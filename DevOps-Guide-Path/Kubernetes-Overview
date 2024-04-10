@@ -194,3 +194,53 @@ kubectl rollout history deployment/myapp-deployment - commands to show the revis
 * All containers/PODs can communicate to one another without NAT.
 * All nodes can communicate with all containers and vice-versa without NAT.
 * K8s expects us to set up a networking solution that meets these criteria. Fortunately there are multiple pre-built solutions available, some of them are the Cisco ACI Networks, Cilium, big cloud fabric, flannel, VMware nsx-t, and Calico.
+
+## Services
+NodePort - where the service makes an internal port accessible on a port on the node. NodePort Range: 30000-32767
+ClusterIP - where the service creates a virtual IP inside the cluster to enable communication between different services such as a set of front-end servers, to a set of back-end servers.
+LoadBalancer - where it provisions a load balancer for our application in supported cloud providers such as AWS, GCP, and Azure. 
+* Sample yaml file of service NodePort.
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-svc
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 30008
+  selector:
+    app: myapp
+    type: front-end
+---
+* Sample yaml file of service ClusterIP.
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+      port: 80
+  selector:
+    app: myapp
+    type: back-end
+---
+* Sample yaml file of service LoadBalancer.
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: LoadBalancer
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 30008
+  selector:
+    app: myapp
+    type: back-end
+---
+kubectl get services - command that lists the service, the ClusterIP and the mapped ports.
