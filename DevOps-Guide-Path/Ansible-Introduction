@@ -1,0 +1,35 @@
+## Ansible Introduction - Ansible is a powerful ID Automation tool that you can learn quickly.
+Install VirtualBox on your local machine LINK: https://www.virtualbox.org/wiki/Downloads
+
+osboxes.org - Go to this site and select the VM images and then you'll find a list of various different OS.
+NOTE: In your local machine for example windows OS by default Virtualization Technology is disabled go to google or restart your local machine and enable it.
+
+In this demo we will deploying 3 servers 1 for ansible-controller and 2 for ansible-target server.
+VirtualBox Installation Guide: Create Virtual New Machine > Version should be the VM Images you downloaded then next > Memory size should be 2Gb > Hard disk Locate 'Use an existing virtual hard disk file' and then find your downloaded images then click OK > Before powering on the template, Go to settings and go to System locate processor then increase the CPU from 1 to 2 > After that go to network section changed attached to 'Bridged Adpater' this way your VM gets an IP address as well as it can connect to the internet to download and install packages as required > to find the password of your download images/OS go the website osboxes.org/centos/ and go to the info section.
+
+NOTE: The VM should be powered off or Shutdown
+Cloning of created VirtualBox: Right click on centos-template and select clone > In the new machine name, name it ansible-controller make sure to check the box 'Reinitialize the MAC address of all network cards' > in the next page Clone type select 'Linked clone' a linked clone will basically is space saving > next is to clone another VirtualBox same process and name it ansible-target1 and so on.. Dont forget to start the servers.
+
+Run terminal > type $ifconfig - this command tells the IP address currently assigned to the virtual machine.
+
+Renaming the Host Server:
+$sudo vi /etc/hostname - remove the data and replace to the correct one.
+$sudo vi /etc/hosts - see below to change it or copy paste it to the file
+127.0.0.1	localhost <HOST_NAME>
+::1		localhost <HOST_NAME>
+After the changes you must restart the system to applied the changes.
+$ shutdown now -r - this command is to restart the server.
+Repeat the process to ansible-target1 and ansible-target2
+
+Below is the link how to install ansible packages.
+Link: https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-from-epel
+
+NOTE: Install only on your ansible-controller.
+First is to try to ssh to the target server, this way the other server knows that the connection was secured.
+$mkdir test-project
+$cd test-project/
+$cat > inventory.txt
+target1 ansible_host=<HOST_IP_ADDRESS> ansible_ssh_pass=<HOST_PASSWD>
+and then press CTRL-C to save it.
+$ansible target1 -m ping -i inventory.txt - this command will perform a ping test through Ansible and make sure that it can establish a connection.
+After successful pinging clone another VirtualBox and name it ansible-target2 then repeat the process.
