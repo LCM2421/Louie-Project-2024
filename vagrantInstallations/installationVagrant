@@ -1,0 +1,103 @@
+Procedure:
+*First run powershell and run as administrator
+* To install chocolatey go to the URL Below
+https://docs.chocolatey.org/en-us/choco/setup#more-install-options
+Follow the procedures
+Run Get-ExecutionPolicy.
+PS C:\WINDOWS\system32> Get-ExecutionPolicy
+If it returns Restricted, 
+Restricted
+
+then run Set-ExecutionPolicy AllSigned 
+or Set-ExecutionPolicy Bypass -Scope Process.
+PS C:\WINDOWS\system32> Set-ExecutionPolicy AllSigned
+just type 'y'
+
+PS C:\WINDOWS\system32> Set-ExecutionPolicy Bypass -Scope Process -Force; \
+[System.Net.ServicePointManager]::SecurityProtocol \ 
+= [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
+iex ((New-Object System.Net.WebClient) .DownloadString('https://community.chocolatey.org/install.ps1'))
+
+To verify the choco
+PS C:\WINDOWS\system32> choco
+Chocolatey v0.12.1
+Please run 'choco -?' or 'choco <command> -?' for help menu.
+
+to upgrade or update the chocolatey
+PS C:\WINDOWS\system32> choco upgrade chocolatey
+=========================End==============================
+*Install Git
+https://git-scm.com/downloads
+Run git bash to check if its install
+$ git --version
+git version 2.35.1.windows.2
+
+=========================End==============================
+*Install Vagrant
+https://www.vagrantup.com/downloads
+Run powershell to check if its install
+vagrant --version
+Vagrant 2.2.19
+=========================End==============================
+Run windows terminal as administrator 
+make a directory
+> mkdir vagrant-test
+> cd vagrant-test
+> vagrant init
+edit the file Vagrantfile
+> notepad Vagrantfile
+paste this code
+Vagrant.configure("2") do |config|
+    # The "s1" with quote's will serve as the name of the machine and |s1| will serve as the function name on the code
+    config.vm.define "m1" do |m1|
+        m1.vm.box = "ubuntu/focal64"
+        m1.vm.network "private_network", ip: "10.10.10.10"
+        m1.vm.synced_folder "../", "/vagrant_data"
+        m1.vm.provider "virtualbox" do |vb|
+	m1.vm.hostname = "MainServer"
+            #   # Display the VirtualBox GUI when booting the machine
+            #   vb.gui = true
+            #
+            #   # Customize the amount of memory on the VM:
+            vb.cpus = 3
+            vb.memory = "1024"
+        end
+    end
+    # The "s2" with quote's will serve as the name of the machine and |s2| will serve as the function name on the code
+    config.vm.define "s1" do |s1| 
+        s1.vm.box = "ubuntu/focal64"
+        s1.vm.network "private_network", ip: "10.10.10.11"
+        s1.vm.synced_folder "../", "/vagrant_data"
+        s1.vm.provider "virtualbox" do |vb|
+	s1.vm.hostname = "Server1"
+            #   # Display the VirtualBox GUI when booting the machine
+            #   vb.gui = true
+            #
+            #   # Customize the amount of memory on the VM:
+            vb.cpus = 2
+            vb.memory = "1024"
+        end
+    end
+end
+
+> vagrant up <name of VM>
+This command creates and configures guest machines according to your Vagrantfile.
+after the installation process
+
+> vagrant ssh <name of VM>
+This will SSH into a running Vagrant machine and give you access to a shell.
+
+> vagrant status
+This will tell you the state of the machines Vagrant is managing.
+
+> vagrant suspend
+This suspends the guest machine Vagrant is managing, rather than fully shutting it down or destroying it.
+
+> vagrant halt
+This command shuts down the running machine Vagrant is managing.
+
+> vagrant destroy
+This command stops the running machine Vagrant is managing and destroys all resources that were created \
+during the machine creation process. After running this command, your computer should be left at a clean \
+state, as if you never created the guest machine in the first place.
+=========================End==============================
