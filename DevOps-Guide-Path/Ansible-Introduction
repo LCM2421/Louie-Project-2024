@@ -33,3 +33,111 @@ target1 ansible_host=<HOST_IP_ADDRESS> ansible_ssh_pass=<HOST_PASSWD>
 and then press CTRL-C to save it.
 $ansible target1 -m ping -i inventory.txt - this command will perform a ping test through Ansible and make sure that it can establish a connection.
 After successful pinging clone another VirtualBox and name it ansible-target2 then repeat the process.
+
+## Ansible Concepts
+#Invetory
+* Ansible is agent less and it means that you don't need to install any additional software on the target machines to be able to work with Ansible.
+* ansible_connection inventory parameter value to localhost to tell Ansible to make a local connection instead of ssh.
+* winrm is the parameter we used if we want to connect to a windows OS.
+* the default inventory file of Ansible is located at /etc/ansible/hosts.
+Sample Inventory Parameters:
+- ansible_connection - ssh/winrm/localhost
+- ansible_port - 22/5986
+- ansible_user - root/administrator
+- ansible_ssh_pass - user/root password
+Inventory.yaml
+SERVER_ALIAS	Servers					Connectivity
+web		ansible_host=server1.company.com	ansible_connection=ssh
+db		ansible_host=server1.company.com	ansible_connection=winrm
+mail		ansible_host=server1.company.com	ansible_connection=ssh
+web2		ansible_host=server1.company.com	ansible_connection=winrm
+
+# Sample Inventory File with groups and nodes
+
+# Web Servers
+web1 ansible_host=server1.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web2 ansible_host=server2.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web3 ansible_host=server3.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+db1  ansible_host=server4.company.com ansible_connection=winrm ansible_user=administrator ansible_ssh_pass=Dbp@ss123!
+[bob@student-node playbooks]$ vi inventory 
+[bob@student-node playbooks]$ vi inventory 
+[bob@student-node playbooks]$ cat inventory 
+# Sample Inventory File
+
+# Web Servers
+web1 ansible_host=server1.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web2 ansible_host=server2.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web3 ansible_host=server3.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+
+# Database Servers
+db1 ansible_host=server4.company.com ansible_connection=winrm ansible_user=administrator ansible_password=Password123!
+
+[web_servers]
+web1
+web2
+web3
+
+[db_servers]
+db1
+[bob@student-node playbooks]$ vi inventory 
+[bob@student-node playbooks]$ vi inventory 
+[bob@student-node playbooks]$ cat inventory 
+# Sample Inventory File
+
+# Web Servers
+web_node1 ansible_host=web01.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node2 ansible_host=web02.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node3 ansible_host=web03.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+
+# DB Servers
+sql_db1 ansible_host=sql01.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+sql_db2 ansible_host=sql02.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+
+[db_nodes]
+sql_db1
+sql_db2
+
+[web_nodes]
+web_node1
+web_node2
+web_node3
+
+[boston_nodes]
+sql_db1
+web_node1
+
+[dallas_nodes]
+sql_db2
+web_node2
+web_node3
+
+[us_nodes:children]
+boston_nodes
+dallas_nodes
+
+
+#Ansible playbooks
+* Ansible playbooks are Ansible, orchestration, language. It is in playbooks where we define what we want Ansible to do.
+* To check the configure_database.yml playbook for syntax errors, you can use ansible-playbook --syntax-check configure_database.yml command.
+* To run ansible-lint on the database_setup.yml playbook, use ansible-lint database_setup.yml command.
+* To run update_service.yml playbook in check mode, use ansible-playbook update_service.yml --check command.
+* To run the configure_database.yml playbook in both check mode and diff mode, use ansible-playbook configure_database.yml --check --diff command.
+* If Ansible-lint provides no output after checking a playbook, it indicates that, the playbook adheres to best practices and has no style-related issues.
+
+# Sample playbooks and inventory
+# playbooks.yml
+---
+- name: 'Execute two commands on web_nodes'
+  hosts: web_nodes
+  become: yes
+  tasks:
+    - name: 'Execute a date command'
+      command: date
+    - name: 'Task to display hosts file'
+      command: 'cat /etc/hosts'
+# inventory
+node01 ansible_host=node01 ansible_ssh_pass=caleston123
+node02 ansible_host=node02 ansible_ssh_pass=caleston123
+[web_nodes]
+node01
+node02
