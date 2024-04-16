@@ -163,3 +163,128 @@ node02
 ansible-inventory --list -i aws_inventory.py - command to list all hosts in your AWS inventory.
 * cisco.ios collection is specifically designed for managing Cisco IOS devices. 
 * to deploy an application on AWS and need to set up ec2 instances using Ansible. ec2_instance module is primarily used for managing ec2 instances.
+# sample code using lineinfile and user creation
+---
+- name: 'hosts'
+  hosts: all
+  become: yes
+  tasks:
+    - name: 'Execute a script'
+      script: '/tmp/install_script.sh'
+    - name: 'Start httpd service'
+      service:
+        name: 'httpd'
+        state: 'started'
+    - name: "Update /var/www/html/index.html"
+      lineinfile:
+        path: /var/www/html/index.html
+        line: "Welcome to ansible-beginning course"
+        create: true
+    - name: 'Create a new user'
+      user:
+        name: 'web_user'
+        uid: 1040
+        group: 'developers'
+
+# Ansible variables
+The secret of success is to do the common things uncommonly well.
+* Ansible variables - stores information that varies with each host or different items.
+# sample variable code within the playbooks
+---
+- hosts: localhost
+  vars:
+    car_model: 'BMW M3'
+    country_name: USA
+    title: 'Systems Engineer'
+  tasks:
+    - command: 'echo "My car is {{ car_model }}"'
+    - command: 'echo "I live in the {{ country_name }}"'
+    - command: 'echo "I work as a {{ title }}"'
+# sample codes with passing values that defined on the inventory
+user_setup.yaml
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set up user
+      user:
+        name: "{{ user_details.username }}"
+        password: "{{ user_details.password }}"
+        comment: "{{ user_details.email }}"
+        state: present
+inventory
+localhost ansible_connection=local nameserver_ip=8.8.8.8 snmp_port=160-161
+node01 ansible_host=node01 ansible_ssh_pass=caleston123
+node02 ansible_host=node02 ansible_ssh_pass=caleston123
+[web_nodes]
+node01
+node02
+
+[all:vars]
+app_list=['vim', 'sqlite', 'jq']
+user_details={'username': 'admin', 'password': 'secret_pass', 'email': 'admin@example.com'}
+
+# Ansible conditionals
+* sample codes using 'when' condition to run this task only on node02 host.
+---
+-  name: 'Execute a script on all web server nodes'
+   hosts: all
+   become: yes
+   tasks:
+     -  service: 'name=nginx state=started'
+        when: 'ansible_host =="node02"'
+* another sample of conditional that define vars age of localhost.
+---
+- name: 'Am I an Adult or a Child?'
+  hosts: localhost
+  vars:
+    age: 25
+  tasks:
+    - name: I am a Child
+      command: 'echo "I am a Child"'
+      when: 'age < 18'
+    - name: I am an Adult
+      command: 'echo "I am an Adult"'
+      when: 'age >= 18'
+* other sample using conditional that uses register command
+---
+- name: 'Add name server entry if not already entered'
+  hosts: localhost
+  become: yes
+  tasks:
+    - shell: 'cat /etc/resolv.conf'
+      register: command_output
+    - shell: 'echo "nameserver 10.0.250.10" >> /etc/resolv.conf'
+      when: 'command_output.stdout.find("10.0.250.10") == -1'
+
+# Ansible loops
+Loop is a looping directive that executes the same task multiple number of times. It stores the value of each item in the loop in a variable named item.
+* with_* - everything you see after with_ string is a lookup plugin. This is a custom scripts that can do specific tasks like read files, connect to a URL or connect to a DB or connect to other systems like k8s or OpenShift.
+* Example codes in Loop
+---
+-  name: 'Print list of fruits'
+   hosts: localhost
+   vars:
+     fruits:
+       - Apple
+       - Banana
+       - Grapes
+       - Orange
+   tasks:
+     - command: 'echo "{{ item }}"'
+       with_items: '{{ fruits }}'
+* Another codes to update and to install all packages defined under packages variable.
+---
+- name: 'Install required packages'
+  hosts: localhost
+  become: yes
+  vars:
+    packages:
+      - httpd
+      - make
+      - vim
+  tasks:
+    - yum:
+        name: '{{ item }}'
+        state: present
+      with_items: '{{ packages }}'
