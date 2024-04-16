@@ -141,3 +141,25 @@ node02 ansible_host=node02 ansible_ssh_pass=caleston123
 [web_nodes]
 node01
 node02
+
+# Ansible modules
+* Ansible modules are categorized into various groups based on their functionality.
+* Ansible_module_system, modifying IP tables, firewall configurations on the system, working with logical volume groups, mounting operations or working with services, for example starting, stopping, or restarting services in a system.
+* Ansible_module_command are used to execute commands or scripts on a hosts. This could be simple commands using the command module or an interactive execution using the inspect module by responding to prompts.
+* Ansible_module_file help work with files. For example, use the ACL module to set and retrieve ACL information on files, use the archive modules to compress and unpack files, use find lining file and replace modules to modify the contents of an existing file.
+* Ansible_module_database help in working with databases such as MongoDB, MYSQL, or PostgreSQL to add or remove databases or modify database configurations.
+* Ansible_module_cloud section has a vast collection of modules for various different cloud providers like Amazon, Azure, Docker, Google, Openstack and VMware being just a few of them.
+* Ansible_module_windows are Windows modules that help you use Ansible in a Window environment. 
+* command modules - executes a command on a remote node
+* lineinfile - Search for a line in a file and replace it or add it if it doesn't exist.
+* Ansible 'command' module support 'free_form' parameter. Ansible does support idempotancy.
+* ansible-doc command to see the information about Ansible modules from command line.
+# Sample custom module file
+- name: Provision custom cloud resource
+  custom_cloud:
+    param1: value1
+    param2: value
+* Ansible plugin would you use to fetch real-time information about your AWS ec2 instances - Dynamic Inventory Plugin will be used to fetch real-time information about your AWS ec2 instances.
+ansible-inventory --list -i aws_inventory.py - command to list all hosts in your AWS inventory.
+* cisco.ios collection is specifically designed for managing Cisco IOS devices. 
+* to deploy an application on AWS and need to set up ec2 instances using Ansible. ec2_instance module is primarily used for managing ec2 instances.
