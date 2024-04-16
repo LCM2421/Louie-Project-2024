@@ -288,3 +288,34 @@ Loop is a looping directive that executes the same task multiple number of times
         name: '{{ item }}'
         state: present
       with_items: '{{ packages }}'
+
+# Ansible Roles
+Roles - introduce a set of best practices that must be followed to organize all tasks into a task directory. Roles make it really easy to develop, reuse and share ansible playbooks to configure a single server with both DB and web application on it
+$ ansible-galaxy init mysql - command to initialize and create a directory structure, this is to create your own role from scratch and then move all of your code into the task directory into a file.
+$ ansible-galaxy search mysql - command to search sample roles available on galaxy website.
+$ ansible-galaxy install geerlingguy.mysql - command to install the specific roles available at galaxy website.
+$ ansible-galaxy list - command to view a list of roles currently installed.
+$ ansible-galaxy dump | grep ROLE - command to check the ansible configuration.
+$ ansible-galaxy install geerlingguy.mysql -p ./roles - command to install it in the current directory.
+Roles can also be defined in the ansible configuration(/etc/ansible/ansible.cfg) which you can modify if required.
+$ vi ansible.cfg
+roles_path = /etc/ansible/roles
+* Sample codes for roles
+- name: Install and Configure MySQL
+  hosts: db-server
+  roles:
+  # roles should be a directory inside your ansible playbook.yml
+  # the default directory of roles on your system /etc/ansible/roles
+    - mysql
+Sample tree structures
+/my-playbook/
+  playbook.yml
+  /roles/
+    /mysql/
+      README.md
+      /templates/
+      /tasks/
+      /handlers/
+      /vars/
+      /defaults/
+      /meta/
