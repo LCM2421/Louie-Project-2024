@@ -1,0 +1,23 @@
+# Infrastructures as Code(IAC)
+IAC Tools for Configuration management > maintain a consistent and standard structure of code, and this makes it easier to manage and update it as needed.
+These are commonly used to install and manage software on existing infrastructure such as servers, databases, networking devices, etc...
+- Anisble
+- Puppet
+- SaltStack
+
+IAC Tools for templating tools > can be used to create a custom image of a virtual machine or a container. These images already contain all the required software and dependencies installed on them. Server templating tools also promote immutable infrastructure, unlike configuration manaagement tools. This means that once the VM or a container is deployed, it is designed to remain unchanged.
+- Docker.
+- HashiCorp Packer
+- HashiCorp Vagrant
+
+IAC Tools for Provisioning tools > these tools are used to provision infrastructure components using a simple declarative code.
+- HashiCorp Terraform
+- CloudFormation
+
+# Declarive in Terraform
+* terraform init - initializes the project and identifies the providers to be used for the target environment.
+* terraform plan - drafts a plan to get to the target state.
+* terraform apply - makes the necessary changes required on the target environment to bring it to the desired state
+
+# Resource in Terraform > A resource can be a compute instance, a database server in the cloud or on physical server on premise that teraform manages.
+# Terrafrom State > it can determine what actions to take when updating resources for a particular platform. Terraform can ensure that the entire infrastructure us always in the defined state at all times. Is a blueprint of the infrastructure deployed by Terraform.
