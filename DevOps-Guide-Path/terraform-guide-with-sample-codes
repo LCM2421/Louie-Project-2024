@@ -38,3 +38,19 @@ $ terraform destroy - to destroy all resources we created.
 }
 * HCL files consists of blocks and arguments. A block is defined within curly braces and it contains a set of arguments in key value pair format representing the configuration data. In simplest form, a block in terraform contains information about t he infrastructure platform and a set of resources within that platform that we want to create.
 * local_sensitive_file resource type to mask the contents of the file from the execution plan.
+
+## Terraform basics
+# Providers
+$ ll .terraform/providers/registry.terraform.io/hashicorp/ - sample command and directory where the providers stored in the current directory that you perform terraform init.
+here's the link for the terraform providers: https://registry.terraform.io/browse/providers
+Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.
+
+# Configuration Directory
+/root/terraform-local-file - sample of our configuration directory.
+File Name	    |	      Purpose
+main.tf		    - Main configuration file containing resource definition.
+variables.tf	- Contains variable declarations.
+outputs.tf	  - Contains outputs from resources.
+provider.tf	  - Contains Provider definition.
+
+IMPORTANT_NOTES: Whenever we add a resource for a provider that has not been used so far in the configuration directory, we have to initialize the directory by running terraform init command.
