@@ -54,3 +54,139 @@ outputs.tf	  - Contains outputs from resources.
 provider.tf	  - Contains Provider definition.
 
 IMPORTANT_NOTES: Whenever we add a resource for a provider that has not been used so far in the configuration directory, we have to initialize the directory by running terraform init command.
+
+# Variables
+* Example of variables.tf files
+variable "filename" {
+  default = "/root/pets.txt"
+}
+variable "content" {
+  default = "We love pets!"
+}
+* Replacing the value on any terraform .tf files
+resource "local_file" "pet" {
+  filename = var.filename
+  content = var.content
+}
+# Variables block in terraform accepts three parameters
+* Example of variables.tf files with block
+variable "filename" {
+  default = "/root/pets.txt"
+  type = string
+  desription = "the path of local file"
+}
+variable "content" {
+  default = "We love pets!"
+  type = string
+  desription = "the content of the file"
+}
+variable "length" {
+  default = 2
+  type = number
+  desription = "length of the pet name"
+}
+variable "password_change" {
+  default = true
+  type = bool
+}
+Basic variable types of variable.tf
+Type        |       Example
+string      -       "/root/pets.txt"
+number      -       1
+bool        -       true/false
+any         -       Default Valie 
+list        -       ["cat", "dog"]
+map         -       pet1 = cat \ pet2 = dog
+object      -       Complex Data Structure
+tuple       -       Complex Data Structure
+* Example of variables.tf files in list
+$ vi variables.tf
+variable "prefix" {
+  default = ["Mr", "Mrs", "Sir"]
+  type = list
+}
+$ vi main.tf
+resource "random_pet" "my-pet" {
+  prefix = var.prefix[0] #Default result would be Mr
+}
+* Example of variables.tf files in list of type
+$ vi variables.tf
+variable "prefix" {
+  default = ["Mr", "Mrs", "Sir"]
+  type = list(string)
+}
+$ vi variables.tf
+variable "prefix" {
+  default = [ 1, 2, 3 ]
+  type = list(number)
+}
+* Example of variables.tf files in map and its using key value pair
+$ vi variables.tf
+variable file-content {
+  type = map
+  default = {
+    "statement1" = "We love pets!"
+    "statement2" = "We love animals!"
+  }
+}
+$ vi main.tf
+resource "local_file" "my-pet" {
+  filename = "/root/pets.txt"
+  content = var.file-content["statement2"]
+}
+* Example of variables.tf files in Map of a type
+$ vi variables.tf
+variable "cats" {
+  default = {
+    "color" = "brown"
+    "name" = "bella"
+  }
+  type = map(string)
+}
+$ vi variables.tf
+variable "et_count" {
+  default = {
+    "dogs" = 3
+    "cats" = 1
+    "goldfix" = 2
+  }
+  type = map(number)
+}
+* Example of variables.tf files in set
+IMPORTANT_NOTES: the difference between a set and a list is that a set can't have duplicate elements.
+$ vi variables.tf
+variable "prefix" {
+  default = ["Mr", "Mrs", "Sir"]
+  type = set(string)
+}
+$ vi variables.tf
+variable "age" {
+  default = [ 10, 12, 15]
+  type = set(number)
+}
+* Example of variables.tf files in objects
+$ vi variables.tf
+variable "bella" {
+  type = object ({
+    name = string #key value pair to "bella"
+    color = string #key value pair to "brown"
+    age = number #key value pair to 7
+    food = list(string) #key value pair to ["fish", "chicken", "turkey"]
+    favorite_pet = bool #key value pair to true
+  })
+
+  default {
+    name = "bella"
+    color = "brown"
+    age = 7
+    food = ["fish", "chicken", "turkey"]
+    favorite_pet = true
+  }
+}
+* Example of variables.tf files in tuples and its similar to a list and consist of a sequence of elements, also tuple can make use of elements of different variable types.
+IMPORTANT_NOTES: the difference between a tuple and a list is that list uses elements of the same variable type, such as string or number.
+$ vi variables.tf
+variable kitty {
+  type = tuple([string, number, bool])
+  default = ["cat", 7, true]
+}
