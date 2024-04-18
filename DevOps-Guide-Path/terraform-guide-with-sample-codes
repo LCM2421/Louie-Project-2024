@@ -15,9 +15,26 @@ IAC Tools for Provisioning tools > these tools are used to provision infrastruct
 - CloudFormation
 
 # Declarive in Terraform
-* terraform init - initializes the project and identifies the providers to be used for the target environment.
-* terraform plan - drafts a plan to get to the target state.
-* terraform apply - makes the necessary changes required on the target environment to bring it to the desired state
+$ terraform init - initializes the project and identifies the providers to be used for the target environment.
+$ terraform plan - drafts a plan to get to the target state.
+$ terraform apply - makes the necessary changes required on the target environment to bring it to the desired state
 
 # Resource in Terraform > A resource can be a compute instance, a database server in the cloud or on physical server on premise that teraform manages.
 # Terrafrom State > it can determine what actions to take when updating resources for a particular platform. Terraform can ensure that the entire infrastructure us always in the defined state at all times. Is a blueprint of the infrastructure deployed by Terraform.
+
+# Installing terraform
+* Command to download terraform binaries in Debian/Ubuntu
+$ wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+$ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+$ sudo apt update && sudo apt install terraform
+$ terraform version - to check the version installed on your local machine.
+$ terraform destroy - to destroy all resources we created.
+* Terraform uses configuration files which are written in HCL to deploy infrastructure resources.
+* Terraform Resource - is an object that terraform manages. It could be a file on a local host, or it could be a virtual machine on the cloud such as ec2 intance.
+#Sample local code structure
+<block> <parameters> {
+  key1 = value1
+  key2 = value2
+}
+* HCL files consists of blocks and arguments. A block is defined within curly braces and it contains a set of arguments in key value pair format representing the configuration data. In simplest form, a block in terraform contains information about t he infrastructure platform and a set of resources within that platform that we want to create.
+* local_sensitive_file resource type to mask the contents of the file from the execution plan.
