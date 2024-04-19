@@ -190,3 +190,30 @@ variable kitty {
   type = tuple([string, number, bool])
   default = ["cat", 7, true]
 }
+
+# Using variables in Terraform
+$ terraform plan -var "filename=/root/pets.txt" -var "content=We love pets!" -var "prefix=Mrs" -var "seperator=." -var "length=2"- Sample of Command Line Flags.
+* Example using environment variables see below. 
+$ export TF_VAR_filename="/root/pets.txt"
+$ export TF_VAR_content="We love pets!"
+$ export TF_VAR_prefix="Mrs"
+$ export TF_VAR_separator="."
+$ export TF_VAR_length="2"
+* Example of terraform.tfvars this is a Variable Definition Files 
+$ vi terraform.tfvars
+filename="/root/pets.txt"
+content="We love pets!"
+prefix="Mrs"
+separator="."
+length="2"
+
+$ terraform apply -var-file terraform.tfvars - example command to use any other file name ending with .tfvars.
+
+* Variable Definition Precedence
+Order       |       Option
+1           -       Environment Variables
+2           -       terraform.tfvars
+3           -       *.auto.tfvars(alphabetical order)
+4           -       -var or -var-file(command-line-flags) #This is the highest priority order and will overwrite any of the previous values.
+
+IMPORTANT_NOTES: Terraform follows a variable definition precedence order to determine the value and the command line flag of "–var or –var-file" takes the highest priority.
