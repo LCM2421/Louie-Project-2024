@@ -284,3 +284,131 @@ variable "separator" {
 variable "length" {
   default = "1"
 }
+
+## Terraform state
+terraform.tfstate - a state file can be considered to be a blueprint of all the resources that are for managers out there in the real world.
+* The state file is created within the configuration directory.
+* a terraform state file cannot be disabled.
+* a state file stored in JSON format.
+IMPORTANT_NOTE: terraform init command does not create a state file. For a state file to be created, you must run terraform apply must be run at least once.
+
+## Terraform command
+$ terraform validate - command to check if everything is correct.
+$ terraform fmt - command scans the configuration files in the current working directory and formats the code into a canonical format.
+$ terraform providers - command to check what providers you use in the current dircetory.
+$ terraform refresh - command to refresh or update the terraform state.
+$ terraform graph - command used to create a visual representation of the dependencies in a terraform configuration or an execution plan.
+IMPORTANT_NOTES: Install graphviz in ubuntu to check the logic of the infrastructures.
+* apt install graphviz -y
+$ terraform graph | dot -Tsvg > graph.svg - command to view the configuration of your infrastructure in a flowchart.
+
+# Mutable vs Immutable infrastructure
+* Mutable infrastructure can be changed after it's created, like editing a document.
+* Immutable infrastructure cannot be changed once it's set up, like a snapshot that stays the same.
+
+# Lifecycle rules
+* Table terraform codes of lifecycle rules
+Order	|	    Option		        | 	Definition
+1	    - create_before_destroy	- Create the resource first and then destroy older.
+2	    - prevent_destroy      	- Prevents destroy of resource.
+3	    - ignore_changes      	- Ignore Changes to resource attributes(specific/all).
+* Example codes of terraform lifecycle rules
+resource "random_string" "string" {
+  length = var.length
+  keepers = {
+    length = var.length
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+$ terraform state show local_file.file - command to show a specific state in a resource type.
+
+# Datasources
+* A datasource can only read resource data and use that information within terraform.
+* Comparison of Resource and Data Source.
+	Resource				                        |	Data Source
+Keyword: resource				                  - Keyword: data
+Creates, Updates, Destroys infrastructure	- Only Reads Infrastructure
+Also called Managed Resources			        - Also called Data Resources
+* Example terraform file uses Data sources.
+output "os-version" {
+  value = data.local_file.os.content
+}
+data "local_file" "os" {
+  filename = "/etc/os-release"
+}
+
+# Meta Arguments
+* Meta arguments can be used within any resource block to change the behaviour of resources.
+
+# Count arguments
+* length function is used to calculate the size of a list, and we can use this function in the count meta argument to dynamically determine the size of the file name variable.
+* Example terraform codes for count.
+$ vi main.tf
+resource "local_file" "pet" {
+  filename = var.filename[count.index]
+  count    = length(var.filename)
+}
+$ vi variable.tf
+variable "filename" {
+  default = [
+    "/root/pets.txt",
+    "/root/dogs.txt",
+    "/root/cats.txt"
+  ]
+}
+
+# for_each arguments
+* for_each - only works with a map or set in the varibles file.
+* Example terraform codes for_each.
+$ vi main.tf
+resource "local_file" "pet" {
+  filename = each.value
+  for_each = var.filename
+}
+$ vi variable.tf
+variable "filename" {
+  type = set(string)
+  default = [
+    "/root/pets.txt",
+    "/root/dogs.txt",
+    "/root/cats.txt"
+  ]
+}
+* toset function
+$ vi main.tf
+resource "local_file" "pet" {
+  filename = each.value
+  for_each = toset(var.filename)
+}
+$ vi variable.tf
+variable "filename" {
+  type = list(string)
+  default = [
+    "/root/pets.txt",
+    "/root/dogs.txt",
+    "/root/cats.txt"
+  ]
+}
+
+# Version Contraints
+!= means "not equal to."
+>= means "greater than or equal to."
+<= means "less than or equal to."
+~> means "approximately greater than or equal to."
+* Example in the terraform code.
+$ vi main.tf
+terraform {
+  required_providers {
+    local = {
+      source = "hashicorp/local"
+      version ~> "1.4.0"
+    }
+  }
+}
+resource "local_file" "pet" {
+  filename = "/root/pet.txt"
+  content  = "We love pets!" 
+}
