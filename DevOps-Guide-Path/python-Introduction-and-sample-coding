@@ -1,0 +1,85 @@
+## Python Introduction
+# Print function
+*Functions - is a part of our code that we can use in order to cause some effect or evaluate a value. Also is a block of code that only runs when it is called and used to cause an effect or evaluate a value.
+TypeError: can only concatenate str (not "int") to str.
+
+>>> print("Hello Future Python Programmer!")
+output: Hello Future Python Programmer!
+** Function Execution
+Python:
+  1. Checks function name
+  2. Checks arguments passed
+  3. Jumps into the function
+  4. Executes the function
+  5. Returns to your code
+  6. Resumes execution 
+
+>>> print("Hello \n Future Python Programmer!")
+\n - The N stands for new line and the backslash lets Python know that the next character after the backslash has a special meaning means this brings the sentence with a new line.
+
+end="" - means empty string instead of a new line("\n")
+>>> print("Hello!", end="");\
+... print("Python is a great language")
+output: Hello! Python is a great language
+>>> print("Hello!", end="!");\
+... print("Python is a great language")
+output: Hello!! Python is a great language
+
+sep="-" or sep="♥" - This keyword allows you to control how python seperates the outputted arguments.
+>>> print("Hello", "Future", "Python", "Programmer!", sep="-")
+output: Hello-Future-Python-Programmer!
+>>> print("Hello", "Future", "Python", "Programmer!", sep="♥")
+output: Hello♥Future♥Python♥Programmer!
+
+*print() Functions Summarize:
+- is a built-in functions: can be used without importing it. 
+- Allows us to print values to the console. 
+- We can invoke it with parentheses. 
+- We can pass the value we want to print as arguments between the parentheses.
+- The backslash \ tells python that the next character has a special menaing (eg.\n).
+- Keyword arguments such as 'sep' and 'end' can be used to format the output.
+
+# Literals in Python
+* Literals - use in order to encode data and put them into your code.
+
+* 4 type of Literals
+Literal types:
+  1. Integers
+    - Octal numbers (eg. 0o123)
+    - Hexadecimal numbers (eg. 0x123)
+  2. Floating point numbers (eg. 1e-22 or 89.394)
+  3. Strings (eg. "Hello!") - Escape quotes eg. 'Hi \'hi\''
+  4. Booleans (eg. True'1' or False'0')
+
+# Operators in Python
+Arithmetic Operators
+add(+)
+subtract(-)
+multiple(*)
+divide(/)
+floor divide (//)
+modulo(%)
+exponential(**)
+
+# Variables in Python
+* Variable kind of as a bucket of store a value.
+- Valid Variable Name
+amount_of_apples
+cost_of_apple
+_total_cost
+COST_OF_APPLE
+- Invalid Variable Name
+am*unt_o%_app|es
+c*st_o%_apple
+5apples_cost
+lastly, the name of the variable can't be any of Python's reserved words.
+
+* Varialbes Summarize:
+- Variables allow you to store values.
+- A Variable has a valid name(letters, digits, underscore, not a reserved keyword)
+- Python is dynamically typed: variables can be redeclared.
+- We can use shortcut operators in order to cleanly redeclare a variable.
+- We can combine text and variables using the + operator in the print function.
+>>> cost_of_apple = 5
+>>> print("One apple costs: " + cost_of_apple	)
+output: One apple costs: 5
