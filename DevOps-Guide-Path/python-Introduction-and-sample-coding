@@ -83,3 +83,233 @@ lastly, the name of the variable can't be any of Python's reserved words.
 >>> cost_of_apple = 5
 >>> print("One apple costs: " + cost_of_apple	)
 output: One apple costs: 5
+
+# Comments
+* Comments summary
+- Comments allow you add information for humans to your code.
+- A comment is created by a # followed by text.
+- A multi-line comment should have a # in front of every line.
+- Don't write unnecessary comments, write self-documenting code instead.
+
+# Input
+* Type Casting
+- Integers > int()
+- Floating point > float()
+* Sample codings
+>>> age = input("How old are you? ")
+output: How old are you? 22
+>>> print (int(age) - 10))
+output: 12
+>>> age = int(input("How old are you? "))
+output: How old are you? 22
+>>> print (age - 10)
+output: 12
+
+* Input function summary
+- Prompts the user to input some data from the console.
+- It accepts an optional parameter that can be used in order to write a message before the user input.
+- Always returns a string.
+- A program that doesn't use any input function, is called a deaf program.
+
+# String Methods
+* Strings Operations summary
+- You can user + in order to concatenate two strings.
+>>>print("Hello" + " " + "there!")
+output: Hello there!
+- You can use * in order to repeat a string a several amount of times.
+>>>print("ha" * 2)
+output: haha
+- With the str function, you can type-cast a number into a string.
+>>>print(int("22"))
+output: 22
+>>>print(str("22"))
+output: "22"
+
+# Comparison Operators
+* Equal(==) - checks if both values are equal to each other.
+>>> print(2 == 2)
+output: True
+>>> print(2 == 4)
+output: False
+>>> print("Hello!" == "Hello!")
+output: True
+>>> print("Hello!" == "Goodbye!")
+output: False
+* NotEqual(!=)  - the opposite of the equal operator.
+>>> print(2 != 2)
+output: False
+>>> print(2 != 4)
+output: True
+>>> print("Hello!" != "Hello!")
+output: False
+>>> print("Hello!" != "Goodbye!")
+output: True
+* Greater than(>) - checks if the left hand apparents is greater than the right hand apparent.
+>>> print(4 > 2)
+output: True
+>>> print(2 > 4)
+output: False
+>>> print(2 > 2)
+output: False
+* Greater than or equal to(>=) - almost identical to the greater than operator, but also returns true if both values are equal to each other.
+>>> print(4 >= 2)
+output: True
+>>> print(2 >= 4)
+output: False
+>>> print(2 >= 2)
+output: True
+* smaller or less than(<) - returns true if the left hand apparent is smaller than the  right hand apparent.
+>>> print(4 < 2)
+output: False
+>>> print(2 < 4)
+output: True
+>>> print(2 < 2)
+output: True
+* smaller or less than or equal to(<=) - also returns true if both values are equal to each other.
+>>> print(4 <= 2)
+output: False
+>>> print(2 <= 4)
+output: True
+>>> print(2 <= 2)
+output: True
+
+# Conditional Statements
+What keyword would you use to add an alternative condition to an if statement?
+Answer: elif
+* sample in codes
+a = 5
+b = 10
+if b > a:
+  print("b is greater than a")
+output: True
+---
+x = 3
+if ( x == 0 ):
+  print("Am I here?")
+elif ( x == 3 ):
+  print("Or here?")
+print("Or over here?")
+output: Or here?
+	Or over here?
+---
+a = 5
+b = 10
+if b < a:
+  print("a is greater than b")
+elif a == b:
+  b = 5
+  print("a and b are equal")
+else:
+  print("b is greater than a")
+output: b is greater than a
+---
+x = 0
+a = 6
+b = 6
+if a > 0:
+    if b < 0: 
+        x = x + 6 
+    elif a > 6:
+        x = x + 5
+    else:
+        x = x + 4
+else:
+    x = x + 3
+print(x)
+output: 4
+
+# Loops - While
+* While loops - allows you to execute code as long as a certain condition is true.
+* Sample in codings
+secret_number = 3
+guess = int(input("Guess the number: "))
+while guess != secret_number:
+  guess = int(input("Guess the number: "))
+else:
+  print("Congratulations, you got it!")
+Execution of user:
+Guess a number: 0
+Guess a number: 4
+Guess a number: 3
+Congratulations, you got it!
+---
+i = 2
+while True:
+    if i%3 == 0:
+        break
+    print(i)
+    i += 2
+answer: 2 and 4
+---
+x = 0
+while (x < 50):
+  x+=2
+print(x)
+Answer:
+In the "while" loop as per statement "x" is increased by 2. Like 2, 4, 6 … 48 50. 
+Value 50 is not satisfying the given condition so it's exited from the loop and the final value we got for "x" is 50.
+---
+i = 1
+x = 3
+sum = 0
+while ( i <= x ):
+ sum += i
+ i += 1
+print(sum)
+answer: 6
+---
+i = 5
+while True:
+    if i % 0o11 == 0:
+        break
+    print(i)
+    i += 1
+answer: 5,6,7,8
+
+# Loops - for
+* Samples in codings
+x = 'abcd'
+for num in range(5, 11):
+  print(num)
+Output:
+5
+6
+7
+8
+9
+10
+---
+x = 'abcd'
+for i in x:
+    print(i)
+    x.upper()
+Output:
+a
+b
+c
+d
+x = 'abcd'
+for i in range(len(x)):
+    print("hello")
+output:
+hello
+hello
+hello
+hello
+---
+We want to iterate over the values from 0 to 10, and print their values. However, we want to skip all the values that are even.
+for num in range(0, 11):
+	if num % 2 != 0: print(num);
+print(num)
+Output:
+1
+3
+5
+7
+9
+10
+
+* Summary of Python using loops
+- 'if/else' statements allow us to conditionally run code.
+- A 'while' loop makes it possible to repetitively execute code based on a certain condition.
+- We can execute code for each iteam in a sequence with a for ... in loop.
