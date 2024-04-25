@@ -728,3 +728,70 @@ Output:
 First argument: Welcome
 Next argument: to
 Next argument: Python!
+
+# Tuples
+* A tuple is an immutable data type that we can write by using either paretheses instead of the square brackets that we previously saw when we created lists or simply as a set of values separated by commas.
+* Example in codings
+Write a Python program to create an empty tuple
+x = ()
+---
+Access value 30 from the following tuple
+a = (10, [20, 30], 40, 50)
+print(a[1][1])
+---
+a = (10, 20, 30, 40, 50)
+a = a[::-1]
+print(a)
+Output: (50, 40, 30, 20, 10)
+---
+create a tuple called tuple1 which contains numbers from 1 to 5
+tuple = (1, 2, 3, 4, 5)
+tuple = 1, 2, 3, 4, 5
+---
+tuple1 = (0, 1, 2, 3, 4, 5)
+print(tuple1[0:4])
+Output: (0, 1, 2, 3,)
+
+# Dictionaries
+* A dictionary is a collection that is ordered, changeable, and does not allow duplicates.
+* All the key value pairs in a dictionary are surrounded by curly braces {} and the keys are seperated from the values with a colon.
+dictionary.clear() - is one of the dictionary built-in methods that used to delete all items from the dictionary.
+dictionary.popitem() - is one of the dictionary built-in methods that used to delete the last item from the dictionary.
+
+* Example in codings
+testdict = {
+  "brand": "Samsung",
+  "ram": "3",
+  "Os": "Android",
+  "year": 2020
+}
+testdict.update({'brand':'oppo' })
+print(testdict)
+Output:
+{'brand': 'oppo', 'ram': '3', 'Os': 'Android', 'year': 2020}
+---
+testdict = {'brand': 'oppo', 'ram': '3', 'Os': 'Android', 'year': 2020}
+del testdict['brand']
+print(testdict)
+Output:
+{'ram': '3', 'Os': 'Android', 'year': 2020}
+---
+testdict = {
+  "brand": "Samsung",
+  "ram": "3",
+  "Os": "Android",
+  "year": 2020
+}
+print(testdict.keys())
+Output:
+dict_keys(['brand', 'ram', 'Os', 'year'])
+---
+testdict = {
+  "brand": "Samsung",
+  "ram": "3",
+  "Os": "Android",
+  "year": 2020
+}
+print(testdict.items())
+Output:
+dict_items([('brand', 'Samsung'), ('ram', '3'), ('Os', 'Android'), ('year', 2020)])
