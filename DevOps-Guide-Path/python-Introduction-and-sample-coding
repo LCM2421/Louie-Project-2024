@@ -673,3 +673,58 @@ names = ["john", "mark", "emmy"]
 my_function(names)
 Output: john mark emmy
 
+# Scopes - Global keyword
+* Example in codings
+x = 20
+def my_function():
+  x = 30
+  print(x, end=' ')
+my_function()
+print(x, end=' ')
+Output: 30 20
+---
+x = 30
+def my_function():
+  global x
+  x = 20
+my_function()
+print(x)
+Output: 20
+---
+def my_function():
+  x = 20
+  def my_inner_function():
+    print(x)
+  my_inner_function()
+my_function()
+Output: 20
+
+# Function - Arguments Explained
+* Example in codings
+def my_function(*ages):
+  print("The older friend is " + ages[0] + " years")
+my_function("13", "12", "11")
+Output: The older friend is 13 years
+---
+def my_function(*argv):
+  print(argv)
+my_function('Hello', 'World!')
+Output: ('Hello', 'World!')
+---
+def my_function(*argv):  
+    for arg in argv:  
+        print(arg) 
+my_function('Hello', 'World!')
+Output:
+Hello
+World!
+---
+def my_function(arg1, *argv): 
+    print ("First argument:", arg1) 
+    for arg in argv: 
+        print("Next argument:", arg) 
+my_function('Welcome', 'to', 'Python!')
+Output:
+First argument: Welcome
+Next argument: to
+Next argument: Python!
