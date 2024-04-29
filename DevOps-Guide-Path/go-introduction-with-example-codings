@@ -1,0 +1,96 @@
+## Download and install Go in linux 
+* Go to this link (https://go.dev/dl/) and Donwload this package for linux
+- go1.22.2.linux-amd64.tar.gz
+* Remove any previous Go installation
+$ sudo rm -rf /usr/local/go && tar -C /usr/local -xzf go1.22.2.linux-amd64.tar.gz
+* Change the file permission to root
+$ sudo chown -R root:root ./go
+* Move the file to user
+$ sudo mv -v go /usr/local
+* Setting up go lang PATH environment on linux
+$ vi ~/.bash_profile
+* Append the following 2 lines to set up GOPATH and $PATH (see how to set path variables on Linux):
+# set up Go lang path #
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+---
+Example guidelines regarding PATH in linux
+https://www.cyberciti.biz/faq/unix-linux-adding-path/
+https://bash.cyberciti.biz/guide/$PATH
+* to update the bash/sheel environment
+$ source ~/.bash_profile
+* Verify that you've installed Go 
+$ go version
+Output:
+go version go1.22.2 linux/amd64
+
+# Go Modules
+* Modules help with managing dependencies, choosing which versions to use, and making sure that builds can be repeated exactly. They also allow people to run Go code from anywhere, not just in the GOPATH.
+* Using Modules is pretty straightforward. Select any directory outside GOPATH as the root of your project, and create a new module with the go mod init command.
+* A go.mod file will be generated, containing the module path, a Go version, and its dependency requirements, which are the other modules needed for a successful build.
+* If no <modulepath> is specified, go mod init will try to guess the module path from the directory structure. It can also be overridden by supplying an argument.
+* Creating a directory go into that directory
+$ mkdir go-project
+$ cd go-project
+$ go mod init <modulepath>
+* A go.mod file could look like this:
+$ cat go.mod
+module example.com/m
+
+go 1.22.2
+* The built-in documentation provides an overview of all available 
+$ go help mod
+$ go hep mod init
+
+# Refactoring and your tooling
+* We should be familiar enough with your editor to perform the following with a simple key combination:
+- 'Extract/Inline variable' Being able to take magic values and give them a name lets you simplify your code quickly.
+- 'Extract method/function' It is vital to be able to take a section of code and extract functions/methods.
+- 'Rename' You should be able to confidently rename symbols across files.
+- 'go fmt' Go has an opinioned formatter called go fmt. Your editor should be running this on every file save.
+- 'Run tests' You should be able to do any of the above and then quickly re-run your tests to ensure your refactoring hasn't broken anything.
+In addition, to help you work with your code you should be able to:
+- 'View function signature' You should never be unsure how to call a function in Go. Your IDE should describe a function in terms of its documentation, its parameters and what it returns.
+- 'View function definition' If it's still not clear what a function does, you should be able to jump to the source code and try and figure it out yourself.
+- 'Find usages of a symbol' Being able to see the context of a function being called can help your decision process when refactoring.
+
+# Hello, world codes
+* Create a folder
+$ vi hello.go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, world")
+}
+
+* Run go file
+$ go run hello.go
+
+# How it works
+* When you write a program in Go, you will have a main package defined with a main func inside it. Packages are ways of grouping up related Go code together.
+* The func keyword is how you define a function with a name and a body.
+* With import "fmt" we are importing a package which contains the Println function that we use to print.
+
+* Now create a new file called 'hello_test.go' where we are going to write a test for our 'Hello' function
+$ vi hello_test.go
+package main
+
+import "testing"
+
+func TestHello(t *testing.T) {
+	got := Hello()
+	want := "Hello, world"
+
+	if got != want {
+		t.Errorf("got %q want %q", got, want)
+	}
+}
+
+* The next step is to run the tests. Enter go test in your terminal. If the tests pass, then you are probably using an earlier version of Go. However, if you are using Go 1.16 or later, then the tests will likely not run at all. Instead, you will see an error message like this in the terminal:
+$ go test
+Output:
+PASS
+ok  	example.com/m	0.001s
+* If you encounter any problem just run 'go mod init hello' in your terminal
