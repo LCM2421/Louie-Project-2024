@@ -94,3 +94,298 @@ Output:
 PASS
 ok  	example.com/m	0.001s
 * If you encounter any problem just run 'go mod init hello' in your terminal
+
+* Rewrite the 'hello_test.go' file
+$ vi hello_test.go
+package main
+
+import "testing"
+
+func TestHello(t *testing.T) {
+	got := Hello("Chris")
+	want := "Hello, Chris"
+
+	if got != want {
+		t.Errorf("got %q want %q", got, want)
+	}
+}
+Output:
+# example.com/m [example.com/m.test]
+./hello_test.go:6:15: too many arguments in call to Hello
+	have (string)
+	want ()
+FAIL	example.com/m [build failed]
+
+* Rewrite the 'hello.go' file
+$ vi hello.go
+package main
+
+import "fmt"
+
+func Hello(name string) string {
+	return "Hello, world"
+}
+
+func main() {
+	fmt.Println(Hello("world"))
+}
+Output:
+--- FAIL: TestHello (0.00s)
+    hello_test.go:10: got "Hello, world" want "Hello, Chris"
+FAIL
+exit status 1
+FAIL	example.com/m	0.001s
+
+* Rewrite the 'hello.go' file again
+$ vi hello.go
+package main
+
+import "fmt"
+
+func Hello(name string) string {
+	return "Hello, " + name
+}
+
+func main() {
+	fmt.Println(Hello("world"))
+}
+Output:
+PASS
+ok  	example.com/m	0.001s
+* When you run the tests they should now pass.
+
+* const - used to store a value/data.
+* Rewrite the 'hello.go' file again.
+$ vi hello.go
+package main
+
+import "fmt"
+
+const englishHelloPrefix = "Hello, "
+
+func Hello(name string) string {
+	return englishHelloPrefix + name
+}
+
+func main() {
+	fmt.Println(Hello("world"))
+}
+
+*The next requirement is when our function is called with an empty string it defaults to printing "Hello, World", rather than "Hello, "
+* Rewrite the 'hello_test.go' and 'hello.go' file
+$ vi hello_test.go
+package main
+
+import "testing"
+
+func TestHello(t *testing.T) {
+	t.Run("saying hello to people", func(t *testing.T) {
+		got := Hello("Chris")
+		want := "Hello, Chris"
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+	t.Run("say 'Hello, World' when an empty string is supplied", func(t *testing.T) {
+		got := Hello("")
+		want := "Hello, World"
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+}
+$ vi hello.go
+package main
+
+import "fmt"
+
+const englishHelloPrefix = "Hello, "
+
+func Hello(name string) string {
+	if name == "" {
+		name = "World"
+	}
+	return englishHelloPrefix + name
+}
+
+func main() {
+	fmt.Println(Hello("world"))
+}
+
+* Rewrite the 'hello_test.go' file
+$ vi hello_test.go
+package main
+
+import "testing"
+
+func TestHello(t *testing.T) {
+        t.Run("saying hello to people", func(t *testing.T) {
+                got := Hello("Chris")
+                want := "Hello, Chris"
+                assertCorrectMessage(t, got, want)
+        })
+
+        t.Run("empty string defaults to 'world'", func(t *testing.T) {
+                got := Hello("")
+                want := "Hello, World"
+                assertCorrectMessage(t, got, want)
+        })
+
+}
+
+func assertCorrectMessage(t testing.TB, got, want string) {
+        t.Helper()
+        if got != want {
+                t.Errorf("got %q want %q", got, want)
+        }
+}
+* We've made our test code cleaner by creating a new function for checking conditions. This makes our tests easier to understand and reduces repetition. When using this function, we pass in 't *testing.T' so that if something goes wrong, the test fails properly. To help with testing, it's best to accept 'testing.TB', which can work with both tests and benchmarks. Using 't.Helper()' in our function tells the testing system that it's a helper function. This helps to pinpoint errors better when tests fail. If this seems confusing, you can ignore 't.Helper()' for now and see how test output changes when you comment it out. Comments in Go are great for adding extra info or temporarily disabling code. You can comment out 't.Helper()' by adding '//' at the beginning of the line.
+* Rewrite the 'hello_test.go' file and add new requirements
+$ vi hello_test.go
+#add this to the file.
+        t. Run("in Spanish", func(t *testing.T) {
+                got := Hello("Elodie", "Spanish")
+                want := "Hola, Elodie"
+                assertCorrectMessage(t, got, want)
+        })
+* Dont forget to test it first.
+$ go test
+Output:
+# example.com/m [example.com/m.test]
+./hello_test.go:12:26: too many arguments in call to Hello
+	have (string, string)
+	want (string)
+FAIL	example.com/m [build failed]
+* Fix the compilation problems by adding another string argument to Hello
+$ go hello.go
+#edit and add this new func.
+func Hello(name string, language string) string {
+	if name == "" {
+		name = "World"
+	}
+	return englishHelloPrefix + name
+}
+Output:
+# example.com/m [example.com/m.test]
+./hello.go:15:20: not enough arguments in call to Hello
+	have (string)
+	want (string, string)
+./hello_test.go:7:16: not enough arguments in call to Hello
+	have (string)
+	want (string, string)
+./hello_test.go:17:16: not enough arguments in call to Hello
+	have (string)
+	want (string, string)
+FAIL	example.com/m [build failed]
+
+* Rewrite the 'hello_test.go' file
+$ vi hello_test.go
+#edit and add this new func..
+	if language == "Spanish" {
+		return "Hola, " + name
+	}
+* Rewrite and refactor the 'hello.go' and 'hello_test.go' file
+$ vi hello.go
+package main
+
+import "fmt"
+
+const spanish = "Spanish"
+const englishHelloPrefix = "Hello, "
+const spanishHelloPrefix = "Hola, "
+
+func Hello(name string, language string) string {
+	if name == "" {
+		name = "World"
+	}
+
+	if language == spanish {
+		return spanishHelloPrefix + name
+	}
+
+	return englishHelloPrefix + name
+}
+
+func main() {
+	fmt.Println(Hello("world", "English"))
+}
+$ vi hello_test.go
+package main
+
+import "testing"
+
+func TestHello(t *testing.T) {
+	t.Run("saying hello to people", func(t *testing.T) {
+		got := Hello("Chris", "")
+		want := "Hello, Chris"
+		assertCorrectMessage(t, got, want)
+	})
+	t.Run("in Spanish", func(t *testing.T) {
+		got := Hello("Elodie", "Spanish")
+		want := "Hola, Elodie"
+		assertCorrectMessage(t, got, want)
+	})
+	t.Run("empty string defaults to 'world'", func(t *testing.T) {
+		got := Hello("", "")
+		want := "Hello, World"
+		assertCorrectMessage(t, got, want)
+	})
+
+}
+
+func assertCorrectMessage(t testing.TB, got, want string) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %q want %q", got, want)
+	}
+}
+
+* you can also refactor the const and func value like this.
+$ vi hello.go
+package main
+
+import "fmt"
+
+const (
+	spanish = "Spanish"
+	englishHelloPrefix = "Hello, "
+	spanishHelloPrefix = "Hola, "
+)
+
+func Hello(name string, language string) string {
+	if name == "" {
+		name = "World"
+	}
+
+	if language == spanish {
+		return spanishHelloPrefix + name
+	}
+
+	return greetingPrefix(language) + name
+}
+
+func greetingPrefix(language string) (prefix string) {
+	switch language {
+	case spanish:
+		prefix = spanishHelloPrefix
+	default:
+		prefix = englishHelloPrefix
+	}
+	return
+}
+
+func main() {
+	fmt.Println(Hello("world", "English"))
+}
+
+# concepts:
+* In our function signature we have made a named return value (prefix string).
+* This will create a variable called prefix in your function.
+* It will be assigned the "zero" value. This depends on the type, for example ints are 0 and for strings it is "".
+* You can return whatever it's set to by just calling return rather than return prefix.
+* This will display in the Go Doc for your function so it can make the intent of your code clearer.
+* default in the switch case will be branched to if none of the other case statements match.
+* The function name starts with a lowercase letter. In Go, public functions start with a capital letter and private ones start with a lowercase. We don't want the internals of our algorithm to be exposed to the world, so we made this function private.
+* Also, we can group constants in a block instead of declaring them each on their own line. It's a good idea to use a line between sets of related constants for readability.
