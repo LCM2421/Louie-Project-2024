@@ -1,29 +1,3 @@
-## Download and install Go in linux 
-* Go to this link (https://go.dev/dl/) and Donwload this package for linux
-- go1.22.2.linux-amd64.tar.gz
-* Remove any previous Go installation
-$ sudo rm -rf /usr/local/go && tar -C /usr/local -xzf go1.22.2.linux-amd64.tar.gz
-* Change the file permission to root
-$ sudo chown -R root:root ./go
-* Move the file to user
-$ sudo mv -v go /usr/local
-* Setting up go lang PATH environment on linux
-$ vi ~/.bash_profile
-* Append the following 2 lines to set up GOPATH and $PATH (see how to set path variables on Linux):
-# set up Go lang path #
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
----
-Example guidelines regarding PATH in linux
-https://www.cyberciti.biz/faq/unix-linux-adding-path/
-https://bash.cyberciti.biz/guide/$PATH
-* to update the bash/sheel environment
-$ source ~/.bash_profile
-* Verify that you've installed Go 
-$ go version
-Output:
-go version go1.22.2 linux/amd64
-
 # Go Modules
 * Modules help with managing dependencies, choosing which versions to use, and making sure that builds can be repeated exactly. They also allow people to run Go code from anywhere, not just in the GOPATH.
 * Using Modules is pretty straightforward. Select any directory outside GOPATH as the root of your project, and create a new module with the go mod init command.
