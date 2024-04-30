@@ -1,0 +1,43 @@
+# Step 1: Update the system repository
+$ sudo apt update
+$ sudo apt install zsh -y
+
+# Step 2: Check the installation
+$ zsh --version
+
+# Step 3: Set Zsh as Default Shell
+* Check the shell first
+# echo $SHELL # The default output should be /usr/bash
+$ chsh -s [path] [user]
+[path] specifies the path to the shell you want to use.
+[user] specifies the user for which you want to change the default shell. Not specifying the user changes the default shell for the current user.
+- If you are unsure of the shell path, utilize the which command to specify the Zsh path automatically. For example:
+$ chsh -s $(which zsh)
+- The command changes the default shell to Zsh for the current user. To start using the Z Shell, log out of the terminal and log back in.
+
+# Step 4: Install Oh My Zsh by running the following command:
+$ sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"        
+
+ADDITIONAL: make your terminal beautiful with zsh and PowerLevel10k
+# clone the repository
+$ git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k        
+
+# Download Plugins for autosuggestion and syntax highlighting
+$ git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting        
+
+# Edit your zshrc file
+$ vi ~/.zshrc
+* Find the ZSH_THME and replace it with
+ZSH_THEME="powerlevel10k/powerlevel10k"        
+POWERLEVEL9K_MODE="nerdfont-complete"        
+* Add the plugins which we downloaded
+plugins=(
+  git 
+  zsh-autosuggestions 
+  zsh-syntax-highlighting
+)
+
+# Now the last step you will need to run $ p10k configure or use source to restart the configuration of zsh
+$ source ~/.zshrc
