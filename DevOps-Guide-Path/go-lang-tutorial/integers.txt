@@ -1,0 +1,62 @@
+# Make a seprate directory name helloworld and integers and move the respective files.
+$ mkdir helloworld
+$ mkidr integers
+$ mv hello.go helloworld
+$ mv hello_test.go helloworld
+## Integers
+$ cd integers
+$ vi adder_test.go
+package integers
+
+import "testing"
+
+func TestAdder(t *testing.T) {
+	sum := Add(2, 2)
+	expected := 4
+
+	if sum != expected {
+		t.Errorf("expected '%d' but got '%d'", expected, sum)
+	}
+}
+Output:
+./adder_test.go:6:9: undefined: Add
+NOTES:
+* You will notice that we're using %d as our format strings rather than %q. That's because we want it to print an integer rather than a string.
+* Also note that we are no longer using the main package, instead we've defined a package named integers, as the name suggests this will group functions for working with integers such as Add.
+# To fix the codes edit the file adder_test.go and add ExampleAdd func.
+package integers
+
+import "fmt"
+
+func Add(x, y int) int {
+        return x + y
+}
+
+func ExampleAdd() {
+        sum := Add(1, 5)
+        fmt.Println(sum)
+        // Output: 6
+} 
+* now run test again if its passed.
+$ go test -v ./...
+Output:
+=== RUN   TestHello
+=== RUN   TestHello/saying_hello_to_people
+=== RUN   TestHello/in_Spanish
+=== RUN   TestHello/empty_string_defaults_to_'world'
+--- PASS: TestHello (0.00s)
+    --- PASS: TestHello/saying_hello_to_people (0.00s)
+    --- PASS: TestHello/in_Spanish (0.00s)
+    --- PASS: TestHello/empty_string_defaults_to_'world' (0.00s)
+PASS
+ok      example.com/m/helloworld        (cached)
+=== RUN   ExampleAdd
+--- PASS: ExampleAdd (0.00s)
+PASS
+ok      example.com/m/integers  0.001s
+
+* What we have covered:
+- More practice of the TDD(Test-driven development) workflow
+- Integers, addition
+- Writing better documentation so users of our code can understand its usage quickly
+- Examples of how to use our code, which are checked as part of our tests
