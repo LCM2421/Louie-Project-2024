@@ -7,7 +7,7 @@ $ zsh --version
 
 # Step 3: Set Zsh as Default Shell
 * Check the shell first
-# echo $SHELL # The default output should be /usr/bash
+$ echo $SHELL # The default output should be /usr/bash
 $ chsh -s [path] [user]
 [path] specifies the path to the shell you want to use.
 [user] specifies the user for which you want to change the default shell. Not specifying the user changes the default shell for the current user.
@@ -29,7 +29,7 @@ $ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM
 
 # Edit your zshrc file
 $ vi ~/.zshrc
-* Find the ZSH_THME and replace it with
+* Find the ZSH_THME and replace it, see below for example
 ZSH_THEME="powerlevel10k/powerlevel10k"        
 POWERLEVEL9K_MODE="nerdfont-complete"        
 * Add the plugins which we downloaded
@@ -39,5 +39,5 @@ plugins=(
   zsh-syntax-highlighting
 )
 
-# Now the last step you will need to run $ p10k configure or use source to restart the configuration of zsh
+# Now the last step, you will need to run '$ p10k configure' or use source to restart the configuration of zsh
 $ source ~/.zshrc
