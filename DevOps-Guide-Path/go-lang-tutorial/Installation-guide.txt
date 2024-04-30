@@ -1,6 +1,8 @@
 ## Download and install Go in linux 
 * Go to this link (https://go.dev/dl/) and Donwload this package for linux
 - go1.22.2.linux-amd64.tar.gz
+# or download using curl
+$ curl -OL https://golang.org/dl/go1.22.2.linux-amd64.tar.gz
 * Remove any previous Go installation
 $ sudo rm -rf /usr/local/go && tar -C /usr/local -xzf go1.22.2.linux-amd64.tar.gz
 * Change the file permission to root
@@ -19,6 +21,28 @@ https://www.cyberciti.biz/faq/unix-linux-adding-path/
 https://bash.cyberciti.biz/guide/$PATH
 * to update the bash/sheel environment
 $ source ~/.bash_profile
+* Verify that you've installed Go 
+$ go version
+Output:
+go version go1.22.2 linux/amd64
+
+## Download and install Go in WSL environment(NOTE: its only applicable in zsh)
+* Go to this link (https://go.dev/dl/) and Donwload this package for linux
+- go1.22.2.linux-amd64.tar.gz
+# or download using curl
+$ curl -OL https://golang.org/dl/go1.22.2.linux-amd64.tar.gz
+* Remove any previous Go installation
+$ tar -C /usr/local -xzf go1.22.2.linux-amd64.tar.gz
+* Setting up go lang PATH environment on linux
+$ vi ~/.zshrc
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+---
+Example guidelines regarding PATH in linux
+https://www.cyberciti.biz/faq/unix-linux-adding-path/
+https://bash.cyberciti.biz/guide/$PATH
+* to update the bash/sheel environment
+$ source ~/.zshrc
 * Verify that you've installed Go 
 $ go version
 Output:
