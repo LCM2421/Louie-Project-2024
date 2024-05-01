@@ -1,0 +1,112 @@
+## Iteration
+IMPORTANT_NOTES: To do stuff repeatedly in Go, you'll need 'for'. In Go there are no 'while', 'do', 'until' keywords, you can only use for. Which is a good thing!
+* Make new directory
+$ mkdir iteration && cd iteration
+$ vi repeat_test.go
+package iteration
+
+import "testing"
+
+func TestRepeat(t *testing.T) {
+	repeated := Repeat("a")
+	expected := "aaaaa"
+
+	if repeated != expected {
+		t.Errorf("expected %q but got %q", expected, repeated)
+	}
+}
+* After saving it go test it ($ go test)
+Output:
+# example.com/m/iteration [example.com/m/iteration.test]
+./repeat_test.go:6:14: undefined: Repeat
+FAIL	example.com/m/iteration [build failed]
+
+* Create a file repeat.go
+$ vi repeat.go
+package iteration
+
+func Repeat(character string) string {
+	return ""
+}
+* After saving it go test it ($ go test)
+Output:
+=== RUN   TestRepeat
+    repeat_test.go:10: expected "aaaaa" but got ""
+--- FAIL: TestRepeat (0.00s)
+FAIL
+exit status 1
+FAIL	example.com/m/iteration	0.001s
+
+* Rewrite the repeat.go to correct the codes
+$ vi repeat.go
+package iteration
+
+func Repeat(character string) string {
+        var repeated string
+        for i := 0; i < 5; i++ {
+                repeated = repeated + character
+        }
+        return repeated
+}
+* don't forget to test it ($ go test)
+Output:
+PASS
+ok  	example.com/m/iteration	0.001s
+
+* Now lets refactor our codes.
+$ vi repeat.go
+package iteration
+
+const repeatCount = 5
+
+func Repeat(character string) string {
+	var repeated string
+	for i := 0; i < repeatCount; i++ {
+		repeated += character
+	}
+	return repeated
+}
+IMPORTANT_NOTES: += called "the Add AND assignment operator", adds the right operand to the left operand and assigns the result to left operand. It works with other types like integers.
+
+* Lets add new func called benchmark on repeat_test.go
+$ repeat_test.go
+package iteration
+
+import "testing"
+
+func TestRepeat(t *testing.T) {
+        repeated := Repeat("a")
+        expected := "aaaaa"
+
+        if repeated != expected {
+                t.Errorf("expected %q but got %q", expected, repeated)
+        }
+}
+
+func BenchmarkRepeat(b *testing.B) {
+        for i := 0; i < b.N; i++ {
+                Repeat("a")
+        }
+}
+* Now test the codes if its pass
+
+* The 'testing.B' gives you access to the cryptically named 'b.N.'
+* When the benchmark code is executed, it runs 'b.N' times and measures how long it takes
+* To run the benchmarks do go test -bench=.
+$ go test -bench=.
+Output:
+goos: linux
+goarch: amd64
+pkg: example.com/m/iteration
+cpu: Intel(R) Core(TM) i5-1035G1 CPU @ 1.00GHz
+BenchmarkRepeat-8   	11085861	       106.3 ns/op
+PASS
+ok  	example.com/m/iteration	1.291s
+
+** WRAPPING UP **
+Check the link for strings package. Find a function you think could be useful for you
+https://pkg.go.dev/strings
+---
+More TDD practice
+Learned for loop
+Learned how to write benchmarks
