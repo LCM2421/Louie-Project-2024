@@ -103,6 +103,9 @@ BenchmarkRepeat-8   	11085861	       106.3 ns/op
 PASS
 ok  	example.com/m/iteration	1.291s
 
+* To run all the go lang files try these command below:
+$ go test ../... # if you are under the directory of iteration
+$ go test ./... # If you are under the directory of go-project
 ** WRAPPING UP **
 Check the link for strings package. Find a function you think could be useful for you
 https://pkg.go.dev/strings
