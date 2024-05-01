@@ -195,7 +195,7 @@ Output: This is valid, but our tests still won't compile!
 ./sum_test.go:38:5: invalid operation: got != want (slice can only be compared to nil)
 FAIL    tidy [build failed]
 * To fix this lets use 'reflect.DeepEqual' and don't forget to import 'reflect' in sum_test.go file
-$ vi sum.go
+$ vi sum_test.go
 func TestSumAll(t *testing.T) {
 
 	got := SumAll([]int{1, 2}, []int{0, 9})
@@ -225,9 +225,141 @@ func SumAll(numbersToSum ...[]int) []int {
 
 	return sums
 }
-IMPORTANT_NOTS
+IMPORTANT_NOTES:
 - 'make' allows you to create a slice with a starting capacity of the 'len' of the 'numbersToSum' we need to work through.
 - You can index slices like arrays with 'mySlice[N]' to get the value out or assign it a new value with '='
 - The tests should now pass.
 
+# Refactoring our code using append.
+* There's a limit with slice capacity for example If you have a slice with a capacity of 2 and try to do mySlice[10] = 1 you will get a runtime error.
+* You can use 'append' function which takes a slice and a new value, then returns a new slice with all the items in it.
+$ vi sum.go
+func SumAll(numbersToSum ...[]int) []int {
+	var sums []int
+	for _, numbers := range numbersToSum {
+		sums = append(sums, Sum(numbers))
+	}
 
+	return sums
+}
+
+* Our next requirement is to change SumAll to SumAllTails, where it will calculate the totals of the "tails" of each slice. The tail of a collection is all items in the collection except the first one (the "head").
+* Write the test first
+$ vi sum_test.go
+func TestSumAllTails(t *testing.T) {
+	got := SumAllTails([]int{1, 2}, []int{0, 9})
+	want := []int{2, 9}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
+}
+Output: #Try and run test undefined SumAllTails
+./sum_test.go:45:9: undefined: SumAllTails
+FAIL	tidy [build failed]
+* Create a new function called SumAllTails to define SumAllTails
+$ vi sum.go
+func SumAllTails(numbersToSum ...[]int) []int {
+	var sums []int
+	for _, numbers := range numbersToSum {
+		tail := numbers[1:]
+		sums = append(sums, Sum(tail))
+	}
+
+	return sums
+}
+
+Output: #It should be passed now
+PASS
+ok  	tidy	0.001s
+
+# Lets refactor our code and create a test first.
+$ vi sum_test.go
+func TestSumAllTails(t *testing.T) {
+
+	t.Run("make the sums of some slices", func(t *testing.T) {
+		got := SumAllTails([]int{1, 2}, []int{0, 9})
+		want := []int{2, 9}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
+
+	t.Run("safely sum empty slices", func(t *testing.T) {
+		got := SumAllTails([]int{}, []int{3, 4, 5})
+		want := []int{0, 9}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
+
+}
+Output: Compile time errors are our friend because they help us write software that works,
+runtime errors are our enemies because they affect our users.
+panic: runtime error: slice bounds out of range [1:0] [recovered]
+	panic: runtime error: slice bounds out of range [1:0]
+* To fix this lets rewrite the func on sum.go
+$ vi sum.go
+func SumAllTails(numbersToSum ...[]int) []int {
+	var sums []int
+	for _, numbers := range numbersToSum {
+		if len(numbers) == 0 {
+			sums = append(sums, 0)
+		} else {
+			tail := numbers[1:]
+			sums = append(sums, Sum(tail))
+		}
+	}
+
+	return sums
+}
+Output: it should passed now
+PASS
+ok  	tidy	0.001s
+
+* PROBLEM: Our tests have some repeated code around the assertions again, so let's extract those into a function.
+# Refactoring again lets rewrite function on sum_test.go
+$ vi sum_test.go
+func TestSumAllTails(t *testing.T) {
+
+	checkSums := func(t testing.TB, got, want []int) {
+		t.Helper()
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	}
+
+	t.Run("make the sums of tails of", func(t *testing.T) {
+		got := SumAllTails([]int{1, 2}, []int{0, 9})
+		want := []int{2, 9}
+		checkSums(t, got, want)
+	})
+
+	t.Run("safely sum empty slices", func(t *testing.T) {
+		got := SumAllTails([]int{}, []int{3, 4, 5})
+		want := []int{0, 9}
+		checkSums(t, got, want)
+	})
+
+}
+* If you want to test the new function try to edit this field to 'checkSums(t, got, "dave") then try to run tests.
+$ go test
+Output:
+./sum_test.go:55:3: want declared and not used
+./sum_test.go:56:21: cannot use "dave" (untyped string constant) as []int value in argument to checkSums
+FAIL	tidy [build failed]
+* To fix it edit this field again to 'checkSums(t, got, want)'
+
+# Wrapping up
+We have covered:
+- Arrays
+- Slices
+    *The various ways to make them
+    *How they have a fixed capacity but you can create new slices from old ones using append
+    *How to slice, slices!
+- len to get the length of an array or slice
+- Test coverage tool
+- reflect.DeepEqual and why it's useful but can reduce the type-safety of your code
+NOTES: We've used slices and arrays with integers but they work with any other type too, including arrays/slices themselves. So you can declare a variable of [][]string if you need to.
