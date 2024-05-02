@@ -1,0 +1,340 @@
+## Structs, methods & interfaces
+# Make a new directory and files
+$ mkdir structs-method-&-interfaces
+$ vi shapes_test.go
+package main
+
+import (
+	"testing"
+)
+
+func TestPerimeter(t *testing.T) {
+	got := Perimeter(10.0, 10.0)
+	want := 40.0
+
+	if got != want {
+		t.Errorf("got %.2f want %.2f", got, want)
+	}
+}
+NOTICE: the new format string? The f is for our float64 and the .2 means print 2 decimal places.
+* Try to run the test
+Output: 
+./shapes_test.go:6:9: undefined: Perimeter
+* To fix it create a file shapes.go
+$ vi shapes.go
+func Perimeter(width float64, height float64) float64 {
+	return 0
+}
+* Try to to test
+Output:
+--- FAIL: TestPerimeter (0.00s)
+    shapes_test.go:12: got 0.00 want 40.00
+
+* Lets rewrite the func sum.go file
+$ vi sum.go
+func Perimeter(width float64, height float64) float64 {
+	return 2 * (width + height)
+}
+Output: #it should passed now
+PASS
+ok  	example.com/m/structs-method-interfaces	0.001s
+
+* now lets create a new function for Area
+$ vi shapes_test.go
+func TestArea(t *testing.T) {
+	got := Area(12.0, 6.0)
+	want := 72.0
+
+	if got != want {
+		t.Errorf("got %.2f want %.2f", got, want)
+	}
+}
+$ vi shapes.go
+func Area(width float64, height float64) float64 {
+	return width * height
+}
+* try to run the test
+Output:
+PASS
+ok  	example.com/m/structs-method-interfaces	0.001s
+
+# Now lets refactor our codes.
+$ vi shape.go
+type Rectangle struct {
+	Width  float64
+	Height float64
+}
+A struct is just a named collection of fields where you can store data. check this link: https://golang.org/ref/spec#Struct_types
+$ vi shapes_test.go
+func TestPerimeter(t *testing.T) {
+	rectangle := Rectangle{10.0, 10.0}
+	got := Perimeter(rectangle)
+	want := 40.0
+
+	if got != want {
+		t.Errorf("got %.2f want %.2f", got, want)
+	}
+}
+
+func TestArea(t *testing.T) {
+	rectangle := Rectangle{12.0, 6.0}
+	got := Area(rectangle)
+	want := 72.0
+
+	if got != want {
+		t.Errorf("got %.2f want %.2f", got, want)
+	}
+}
+* try to run the test
+Output:
+./shapes_test.go:9:19: not enough arguments in call to Perimeter
+	have (Rectangle)
+	want (float64, float64)
+./shapes_test.go:18:2: rectangle declared and not used
+./shapes_test.go:19:14: undefined: reactangle
+./shapes_test.go:19:14: not enough arguments in call to Area
+	have (unknown type)
+	want (float64, float64)
+FAIL	example.com/m/structs-method-interfaces [build failed]
+
+* To fix this change the two functions to fix the test.
+$ vi shape.go
+func Perimeter(rectangle Rectangle) float64 {
+	return 2 * (rectangle.Width + rectangle.Height)
+}
+
+func Area(rectangle Rectangle) float64 {
+	return rectangle.Width * rectangle.Height
+}
+* Try to run the test
+Output: #Should passed the test
+PASS
+ok  	example.com/m/structs-method-interfaces	0.001s
+
+# Next requirement is to write an Area function for circles
+$ vi shapes_test.go
+func TestArea(t *testing.T) {
+
+	t.Run("rectangles", func(t *testing.T) {
+		rectangle := Rectangle{12, 6}
+		got := Area(rectangle)
+		want := 72.0
+
+		if got != want {
+			t.Errorf("got %g want %g", got, want)
+		}
+	})
+
+	t.Run("circles", func(t *testing.T) {
+		circle := Circle{10}
+		got := Area(circle)
+		want := 314.1592653589793
+
+		if got != want {
+			t.Errorf("got %g want %g", got, want)
+		}
+	})
+
+}
+IMPORTANT_NOTES: As you can see, the f has been replaced by g, with good reason. Use of g will print a more precise decimal number in the error message (fmt link: https://golang.org/pkg/fmt/). For example, using a radius of 1.5 in a circle area calculation, f would show 7.068583 whereas g would show 7.0685834705770345.
+* Try to run the test
+Output:
+./shapes_test.go:30:13: undefined: Circle
+FAIL	example.com/m/structs-method-interfaces [build failed
+
+* to fix this recreate a new func for circle and type called Circle
+$ vi shapes.go
+type Rectangle struct {
+	Width  float64
+	Height float64
+}
+
+func (r Rectangle) Area() float64 {
+	return r.Width * r.Height
+}
+
+type Circle struct {
+	Radius float64
+}
+
+func (c Circle) Area() float64 {
+	return math.Pi * c.Radius * c.Radius
+}
+IMPORTANT_NOTES: 
+- The syntax for declaring methods is almost the same as functions and that's because they're so similar. The only difference is the syntax of the method receiver 'func (receiverName ReceiverType) MethodName(args)'.
+- When your method is called on a variable of that type, you get your reference to its data via the 'receiverName' variable. In many other programming languages this is done implicitly and you access the receiver via 'this'.
+- It is a convention in Go to have the receiver variable be the first letter of the type.
+Sample: r Rectangle
+
+* Try to run the test
+Output:
+./shapes.go:17:9: undefined: math
+./shapes_test.go:9:9: undefined: Perimeter
+./shapes_test.go:21:10: undefined: Area
+./shapes_test.go:31:10: undefined: Area
+FAIL	example.com/m/structs-method-interfaces [build failed]
+
+* To fix this lets rewrite our codes and use interfaces(LINK: https://golang.org/ref/spec#Interface_types)
+$ vi shapes_test.go
+package main
+
+import (
+	"testing"
+)
+
+func TestPerimeter(t *testing.T) {
+	rectangle := Rectangle{10.0, 10.0}
+	got := Perimeter(rectangle)
+	want := 40.0
+
+	if got != want {
+		t.Errorf("got %.2f want %.2f", got, want)
+	}
+}
+
+func TestArea(t *testing.T) {
+
+	checkArea := func(t testing.TB, shape Shape, want float64) {
+		t.Helper()
+		got := shape.Area()
+		if got != want {
+			t.Errorf("got %g want %g", got, want)
+		}
+	}
+
+	t.Run("rectangles", func(t *testing.T) {
+		rectangle := Rectangle{12, 6}
+		checkArea(t, rectangle, 72.0)
+	})
+
+	t.Run("circles", func(t *testing.T) {
+		circle := Circle{10}
+		checkArea(t, circle, 314.1592653589793)
+	})
+
+}
+NOTES: We are creating a helper function like we have in other exercises but this time we are asking for a Shape to be passed in. If we try to call this with something that isn't a shape, then it will not compile.
+$ vi shapes.go
+package main
+
+import "math"
+
+func Perimeter(rectangle Rectangle) float64 {
+	return 2 * (rectangle.Width + rectangle.Height)
+}
+
+type Rectangle struct {
+	Width  float64
+	Height float64
+}
+
+func (r Rectangle) Area() float64 {
+	return r.Width * r.Height
+}
+
+type Circle struct {
+	Radius float64
+}
+
+func (c Circle) Area() float64 {
+	return math.Pi * c.Radius * c.Radius
+}
+
+type Shape interface {
+	Area() float64
+}
+
+Output: #Should passed the test now
+PASS
+ok  	example.com/m/structs-method-interfaces	0.002s
+
+# Now its passed lets further refactoring our codes.
+* Lets use Table driven tests (https://go.dev/wiki/TableDrivenTests) these are useful when you want to build a list of test cases that can be tested in the same manner.
+$ vi shapes_test.go
+func TestArea(t *testing.T) {
+
+	areaTests := []struct {
+		shape Shape
+		want  float64
+	}{
+		{Rectangle{12, 6}, 72.0},
+		{Circle{10}, 314.1592653589793},
+	}
+
+	for _, tt := range areaTests {
+		got := tt.shape.Area()
+		if got != tt.want {
+			t.Errorf("got %g want %g", got, tt.want)
+		}
+	}
+
+}
+
+* Now lets add our new shape called triangle
+$ vi shape_test.go
+		{Triangle{12, 6}, 36.0},
+* now run the test
+Output: 
+./shapes_test.go:25:4: undefined: Triangle
+FAIL	example.com/m/structs-method-interfaces [build failed]
+* because we haven't defined Triangle yet add new type and function.
+$ vi shapes.go
+type Triangle struct {
+	Base   float64
+	Height float64
+}
+
+func (t Triangle) Area() float64 {
+	return 0
+}
+* Try to run the test
+Output: #this is good because we catch the error
+--- FAIL: TestArea (0.00s)
+    shapes_test.go:31: got 0 want 36
+
+* Now lets rewrite the shapes.go function regarding triangle
+$ vi shapes.go
+func (t Triangle) Area() float64 {
+	return (t.Base * t.Height) * 0.5
+}
+Output: #should passed now
+PASS
+ok  	example.com/m/structs-method-interfaces	0.001s
+
+# Now lets perform our refactoring.
+$ vi shapes_test.go
+func TestArea(t *testing.T) {
+
+	areaTests := []struct {
+		name    string
+		shape   Shape
+		hasArea float64
+	}{
+		{name: "Rectangle", shape: Rectangle{Width: 12, Height: 6}, hasArea: 72.0},
+		{name: "Circle", shape: Circle{Radius: 10}, hasArea: 314.1592653589793},
+		{name: "Triangle", shape: Triangle{Base: 12, Height: 6}, hasArea: 36.0},
+	}
+
+	for _, tt := range areaTests {
+		// using tt.name from the case to use it as the `t.Run` test name
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.shape.Area()
+			if got != tt.hasArea {
+				t.Errorf("%#v got %g want %g", tt.shape, got, tt.hasArea)
+			}
+		})
+
+	}
+
+}
+IMPORTANT_NOTES: 
+- We can change our error message into '%#v got %g want %g'. The '%#v' format string will print out our struct with the values in its field, so the developer can see at a glance the properties that are being tested.
+- To increase the readability of our test cases further, we can rename the want field into something more descriptive like 'hasArea'.
+
+** WRAPPING UP **
+- Declaring structs to create your own data types which lets you bundle related data together and make the intent of your code clearer
+- Declaring interfaces so you can define functions that can be used by different types (parametric polymorphism LINK: https://en.wikipedia.org/wiki/Parametric_polymorphism)
+- Adding methods so you can add functionality to your data types and so you can implement interfaces
+- Table driven tests to make your assertions clearer and your test suites easier to extend and maintain
+- Interfaces are a great tool for hiding complexity away from other parts of the system. In our case our test helper code did not need to know the exact shape it was asserting on, only how to "ask" for its area.
+- As you become more familiar with Go you will start to see the real strength of interfaces and the standard library. You'll learn about interfaces defined in the standard library that are used everywhere and by implementing them against your own types, you can very quickly re-use a lot of great functionality.
