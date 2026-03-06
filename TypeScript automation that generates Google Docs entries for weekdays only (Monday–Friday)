@@ -1,0 +1,240 @@
+var fileIdsToLock = [];
+
+function createDailyStandup() {
+  var today = new Date();
+  var day = today.getDay();
+
+  // // Check if today is Friday or Saturday (for creating docs on Monday)
+  if (day === 5 || day === 6) {  // 5 = Friday, 6 = Saturday
+    console.log("Today is Friday or Saturday. Exiting to prevent document creation for the weekend.");
+    return;
+  }
+
+  // Calculate the document date (tomorrow)
+  var dateForDocs = new Date(today);
+  dateForDocs.setDate(today.getDate() + 1); // Create documents for tomorrow
+
+  // Check if tomorrow is a weekend (so we don't create documents for Saturday or Sunday)
+  var tomorrowDay = dateForDocs.getDay();
+  if (tomorrowDay === 0 || tomorrowDay === 6) {
+    console.log("Tomorrow is a weekend (Saturday or Sunday). Exiting...");
+    return;
+  }
+
+  var dateString = Utilities.formatDate(dateForDocs, Session.getScriptTimeZone(), "yyyy-MM-dd");
+
+  // Folder IDs for different projects
+  var folderIdTest1 = '<YOUR_PUBLIC_GOOGLE_DOCS_ENPOINT>';
+  var folderIdTest2 = '<YOUR_PUBLIC_GOOGLE_DOCS_ENPOINT>';
+
+  // Create or get folders for each project
+  var folderOnlinePlatform = getOrCreateMonthFolder(folderIdOnlinePlatform, dateForDocs);
+  var folderSAPFightFire = getOrCreateMonthFolder(folderIdSAPFightFire, dateForDocs);
+  var folderAsiaSlot = getOrCreateMonthFolder(folderIdAsiaSlot, dateForDocs);
+  var folderSlotsEasyLink2 = getOrCreateMonthFolder(folderIdSlotsEasyLink2, dateForDocs);
+  var folderOnlineGame2SallyStore = getOrCreateMonthFolder(folderIdOnlineGame2SallyStore, dateForDocs);
+
+  if (folderOnlinePlatform && folderSAPFightFire && folderAsiaSlot && folderSlotsEasyLink2 && folderOnlineGame2SallyStore) {
+    createDocInFolder(folderOnlinePlatform, "Online Platform", dateString);
+    createDocInFolder(folderSAPFightFire, "SAP Fight Fire Reskin", dateString);
+    createDocInFolder(folderAsiaSlot, "Asian Slot - Dragons Fortune", dateString);
+    createDocInFolder(folderSlotsEasyLink2, "Slots - Easy Link 2", dateString);
+    createDocInFolder(folderOnlineGame2SallyStore, "Online Game 2 - Sally store", dateString);
+  }
+
+  // Store the file IDs to lock in PropertiesService
+  PropertiesService.getScriptProperties().setProperty('fileIdsToLock', JSON.stringify(fileIdsToLock));
+
+  // Set up trigger to lock the files at 10 AM tomorrow
+  createLockTrigger();
+}
+
+function getOrCreateMonthFolder(parentFolderId, targetDate) {
+  if (!parentFolderId) {
+    console.error("Invalid folder ID provided: " + parentFolderId);
+    return null;
+  }
+
+  try {
+    var parentFolder = DriveApp.getFolderById(parentFolderId);
+  } catch (error) {
+    console.error("Error retrieving parent folder with ID: " + parentFolderId + ", Error: " + error);
+    return null;
+  }
+
+  var year = targetDate.getFullYear().toString().slice(2);
+  var month = (targetDate.getMonth() + 1).toString().padStart(2, '0');
+  var folderName = year + " - " + month;
+
+  var folders = parentFolder.getFoldersByName(folderName);
+  if (folders.hasNext()) {
+    console.log("Folder " + folderName + " already exists.");
+    return folders.next();
+  } else {
+    console.log("Creating new folder: " + folderName);
+    return parentFolder.createFolder(folderName);
+  }
+}
+
+function createDocInFolder(folder, projectTitle, dateString) {
+  if (!folder) {
+    console.error("No valid folder found for " + projectTitle);
+    return;
+  }
+
+  console.log("Creating document for " + projectTitle);
+
+  var docTitle = dateString + " Daily Standup";
+  var doc = DocumentApp.create(docTitle);
+
+  var file = DriveApp.getFileById(doc.getId());
+  folder.addFile(file);
+  DriveApp.getRootFolder().removeFile(file);
+
+  fileIdsToLock.push(file.getId());
+
+  var header = doc.addHeader();
+  header.appendParagraph("NTT - Software Development").setHeading(DocumentApp.ParagraphHeading.HEADING2);
+
+  var body = doc.getBody();
+  
+  var projectParagraph = body.appendParagraph("");
+  projectParagraph.appendText("Project: ").setBold(true);
+  projectParagraph.appendText(projectTitle + "\n").setBold(false);
+  var dateParagraph = body.appendParagraph("");
+  dateParagraph.appendText("Date & Time: ").setBold(true);
+  dateParagraph.appendText(dateString + "\n").setBold(false);
+  body.appendParagraph("Attendance ");
+  body.appendParagraph("\nPresent: \n");
+  body.appendParagraph("\nAbsent: \n");
+
+  body.appendPageBreak();
+
+  body.appendParagraph("Agenda:").setHeading(DocumentApp.ParagraphHeading.HEADING3);
+  var agendaTable = body.appendTable();
+  var headerAgenda = agendaTable.appendTableRow();
+  headerAgenda.appendTableCell("Requester").setBold(true);
+  headerAgenda.appendTableCell("Topic").setBold(true);
+  headerAgenda.appendTableCell("References").setBold(true);
+
+  body.appendParagraph("Tasks:").setHeading(DocumentApp.ParagraphHeading.HEADING3);
+  var tasksTable = body.appendTable();
+  var headerTasks = tasksTable.appendTableRow();
+
+  var taskHeaders = [
+    { text: "Person/ Dept.", width: 93 },
+    { text: "Done", width: 133 },
+    { text: "Time\n(Hours)", width: 50 },
+    { text: "To Do", width: 133 },
+    { text: "Remarks", width: 57 }
+  ];
+  
+  taskHeaders.forEach(function (header) {
+    var cell = headerTasks.appendTableCell(header.text).setBold(true);
+    cell.setWidth(header.width);
+  });
+
+  console.log("Document created in " + projectTitle + ": " + doc.getUrl());
+
+  saveFileIdsToLock();
+}
+
+function saveFileIdsToLock() {
+  PropertiesService.getScriptProperties().setProperty('fileIdsToLock', JSON.stringify(fileIdsToLock));
+}
+
+function createLockTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (trigger.getHandlerFunction() === 'lockFiles') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  var lockTime = new Date();
+  lockTime.setDate(lockTime.getDate() + 1);
+  lockTime.setHours(10);
+  lockTime.setMinutes(0);
+  lockTime.setSeconds(0);
+
+  console.log("Setting trigger to lock files at 10 AM tomorrow.");
+
+  ScriptApp.newTrigger('lockFiles')
+    .timeBased()
+    .at(lockTime)
+    .create();
+}
+
+function lockFiles() {
+  console.log("Starting lockFiles function...");
+
+  // Retrieve file IDs from properties
+  var fileIds = PropertiesService.getScriptProperties().getProperty('fileIdsToLock');
+  if (!fileIds) {
+    console.error("No file IDs found in script properties.");
+    return;
+  }
+
+  // Parse the file IDs
+  try {
+    fileIds = JSON.parse(fileIds);
+  } catch (error) {
+    console.error("Error parsing file IDs: " + error.message);
+    return;
+  }
+
+  console.log("File IDs to lock: " + JSON.stringify(fileIds));
+
+  // Process each file
+  fileIds.forEach(function(fileId) {
+    try {
+      console.log("Processing file ID: " + fileId);
+
+      var file = DriveApp.getFileById(fileId);
+      console.log("Locking file: " + file.getName());
+
+      // Check if the file is in a Shared Drive
+      var isSharedDrive = file.getOwner() == null;
+
+      // Set sharing to view-only
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      console.log("Sharing settings updated to view-only for: " + file.getName());
+
+      if (isSharedDrive) {
+        console.warn("File is in a Shared Drive. Skipping removeEditor step for: " + file.getName());
+      } else {
+        // Remove editors for files not in a Shared Drive
+        var editors = file.getEditors();
+        console.log("Editors before removal: " + editors.map(editor => editor.getEmail()));
+
+        editors.forEach(function(editor) {
+          file.removeEditor(editor.getEmail());
+          console.log("Removed editor: " + editor.getEmail());
+        });
+      }
+    } catch (error) {
+      console.error("Error processing file ID: " + fileId + ". Error: " + error.message);
+    }
+  });
+
+  // Clear file IDs after locking
+  PropertiesService.getScriptProperties().deleteProperty('fileIdsToLock');
+  console.log("File locking process complete and file IDs cleared.");
+}
+
+function weekdayTriggerStandUp() {
+  console.log("Setting weekday trigger for createDailyStandup.");
+
+  // Remove any existing triggers for the same function
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (trigger.getHandlerFunction() === 'createDailyStandup' || trigger.getHandlerFunction() === 'lockFiles') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  // Create a trigger to run createDailyStandup every weekday at 1 PM
+  ScriptApp.newTrigger('createDailyStandup')
+    .timeBased()
+    .atHour(13)  // 1 PM local time (Philippine Time)
+    .everyDays(1)  // Runs every day
+    .create();
+}
