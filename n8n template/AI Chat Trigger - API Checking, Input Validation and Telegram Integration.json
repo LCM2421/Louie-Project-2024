@@ -1,0 +1,498 @@
+{
+  "name": "AI Chat Trigger - API Checking, Input Validation and Telegram Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ⚠️ Invalid Prompt Rules\n\n**Signal 1 - Same character repeated 4+ times:**\n```\naaaaaaaaaaaaa → blocked ❌\nzzzzzzzz      → blocked ❌\nballoon       → allowed ✅ (only 2 repeats)\n```\n---\n**Signal 2 - Repeating 2-character pattern:**\n```\nhahahaha   → blocked ❌\nababababab → blocked ❌\nbookkeeper → allowed ✅\n```\n**Signal 3 - Invalid AI model or non existing AI Model:**\n```\n.../models/black-forest-labs/FLUX.1-wrong_endpoint\n.../models/black-forest-labs/FLUX.1-fake\nto fix it,, it the model should be /FLUX.1-schnell\n```\n**Signal 4 - by default the first thing to check is the API Key**\n```\nIf the API Key is invalid or expired it will always fall back to API Key Checker\n```",
+        "height": 556,
+        "width": 628,
+        "color": 3
+      },
+      "id": "0338abd3-6d2a-475e-96a9-f846079e3adb",
+      "name": "Invalid Prompt Rules1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3872,
+        2992
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=🔑 *Invalid or Expired API Key*\n\nThe Hugging Face API key is not authorized (HTTP {{ $json.statusCode }}).\n\nPlease update the API key in the Generate Image node.",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        4720,
+        3392
+      ],
+      "id": "d276aa22-cc63-45d8-8268-ec3e639d7ff4",
+      "name": "API Key Checker"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=✅ *Image Generated Successfully!*\n\n📝 *Prompt:* {{ $('Get Prompt').item.json.prompt }}\n\n📱 Your image has been sent to Telegram!\n🤖 Model: black-forest-labs/FLUX.1-schnell",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        4832,
+        3584
+      ],
+      "id": "9def8e7a-44b9-4925-8271-18e759213396",
+      "name": "Show image"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=⚠️ *AI Model Sleeping or Overloaded*\n\nStatus: {{ $json.statusCode }}\n\nThe free Hugging Face API sometimes takes 20–30 seconds to wake up.\nPlease try again in a moment.",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        4720,
+        3776
+      ],
+      "id": "1bacf6a3-4a7f-40fd-91d6-8ff54fc4ac52",
+      "name": "Show Error "
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "<INPUT_TG_ID>",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "=🎨 *AI Generated Image*\n\n📝 *Prompt:* {{ $('Get Prompt').item.json.prompt }}",
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4608,
+        3584
+      ],
+      "id": "2d1a278c-de07-4291-bae2-ea090abbdfe6",
+      "name": "Send to Telegram",
+      "webhookId": "5b0876d7-8d42-4370-a022-79b801d83e88",
+      "credentials": {
+        "telegramApi": {
+          "id": "jyyNmZjNWGZ6p3S3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📱 Telegram Setup\n\n**Step 1 — Create bot:**\n- Message @BotFather on Telegram\n- Send `/newbot` → get your **Bot Token**\n\n**Step 2 — Get your Chat ID:**\n- Start chat with your bot\n- Visit: `https://api.telegram.org/bot<TOKEN>/getUpdates`\n- Find `\"chat\":{\"id\": 123456789}`\n\n**Step 3 — n8n Credentials:**\n- Sidebar → Credentials → Add Credential\n- Search: **Telegram**\n- Paste Bot Token → Save as `Telegram Bot`\n\n**Step 4 — n8n Variable:**\n- Settings → Variables\n- Add: `TELEGRAM_CHAT_ID` = your chat ID number",
+        "height": 436,
+        "width": 556,
+        "color": 5
+      },
+      "id": "7364a148-933d-490a-b85f-e292bbf120ba",
+      "name": "Telegram Setup Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        3280
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Chat Trigger sends the user message in chatInput\nconst input = $('Chat Trigger').item.json;\nconst prompt =\n  input.chatInput ||\n  input.message ||\n  input['What do you want to see?'] ||\n  input.prompt ||\n  '';\nif (!prompt) throw new Error('Prompt is empty.');\nreturn [{ json: { prompt } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        3744
+      ],
+      "id": "95a49425-3c5f-412a-9cdb-fa0810b385a4",
+      "name": "Get Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $json.prompt || '';\n\n// ── Rule 1: Minimum length ───────────────────────────────\nif (prompt.trim().length < 3) {\n  return [{ json: { valid: false, reason: 'Prompt is too short. Please type at least 3 characters.' } }];\n}\n\n// ── Rule 2: Block non-ASCII scripts (non-English) ────────\nconst nonAscii = (prompt.match(/[^\\x00-\\x7F]/g) || []).length;\nif (nonAscii / prompt.length > 0.3) {\n  return [{ json: { valid: false, reason: 'Please enter your prompt in English only.' } }];\n}\n\n// ── Rule 3: Block pure numbers / symbols ─────────────────\nif (!/[a-zA-Z]/.test(prompt)) {\n  return [{ json: { valid: false, reason: 'Please use actual words to describe what you want to see.' } }];\n}\n\n// ── Rule 4: Gibberish detection ──────────────────────────\nconst RARE_PAIRS = new Set([\n  'hg','fj','jf','jk','kj','kh','hk','hj','jh',\n  'xk','kx','xz','zx','vx','xv','bz','zb','qz','zq',\n  'qx','xq','gj','jg','fk','kf','vb','bv','fd','df',\n  'gf','fg','hf','fh','kd','dk','lk','kl','pk','kp'\n]);\n\nfunction isGibberishWord(word) {\n  const letters = word.toLowerCase().replace(/[^a-z]/g, '');\n  if (letters.length < 4) return false;\n\n  // Signal 1: very low vowel ratio (y counts)\n  const vowels = (letters.match(/[aeiouy]/g) || []).length;\n  if (vowels / letters.length < 0.15) return true;\n\n  // Signal 2: long consonant cluster (>5 in a row)\n  const clusters = letters.split(/[aeiouy]+/).filter(Boolean);\n  if (clusters.some(c => c.length > 5)) return true;\n\n  // Signal 3: rare/impossible letter pair\n  for (let i = 0; i < letters.length - 1; i++) {\n    if (letters.length >= 6 && RARE_PAIRS.has(letters.slice(i, i + 2))) return true;\n  }\n\n  // Signal 4: 4+ same character repeated in a row (aaaa, zzzz)\n  if (/(..)\\1{3,}/.test(letters) || /([a-z])\\1{3,}/.test(letters)) return true;\n\n  // Signal 5: repeating 2-char pattern (hahaha, ababab)\n  if (/(.{2})\\1{2,}/.test(letters)) return true;\n\n  return false;\n}\n\nconst words = prompt.trim().split(/\\s+/);\nconst checked = words.filter(w => w.replace(/[^a-zA-Z]/g, '').length >= 4);\nconst gibberish = checked.filter(w => isGibberishWord(w));\n\nif (checked.length > 0 && gibberish.length / checked.length > 0.4) {\n  return [{ json: { valid: false, reason: 'Your prompt looks like gibberish. Please describe what you want to see in plain English.' } }];\n}\n\n// ── Rule 5: Max length ───────────────────────────────────\nif (prompt.length > 500) {\n  return [{ json: { valid: false, reason: 'Prompt is too long. Please keep it under 500 characters.' } }];\n}\n\n// ✅ All checks passed\nreturn [{ json: { valid: true, reason: '', prompt } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        3744
+      ],
+      "id": "450748c1-f60e-4039-8769-94a262c6b86b",
+      "name": "Validate Prompt"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "is-true",
+                    "leftValue": "={{ $json.valid }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "rightType": "value"
+                    },
+                    "rightValue": "true"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Valid"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "looseTypeValidation": true
+        }
+      },
+      "id": "3ee8811c-f82c-4eb0-a1dc-1a1828c4e461",
+      "name": "Is Prompt Valid?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        3776,
+        3744
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=❌ *Invalid Prompt*\n\n{{ $('Validate Prompt').item.json.reason }}\n\n✅ *Good examples:*\n• a futuristic city at night\n• a cute cat on a wooden bench\n• an astronaut riding a horse on Mars",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        3968,
+        3760
+      ],
+      "id": "d277c2e2-6830-427b-807b-c0a5f8367cc3",
+      "name": "Show Invalid Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "huggingFaceApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ inputs: $json.prompt }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3968,
+        3584
+      ],
+      "id": "7aa1f25c-c6c2-454b-854a-682d4f62b562",
+      "name": "Generate Image",
+      "credentials": {
+        "huggingFaceApi": {
+          "id": "DzqIURgOgxW7f43P",
+          "name": "HuggingFaceApi account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item;\nconst json = item.json || {};\nconst statusCode = json.statusCode ?? 0;\nreturn [{ json: { ...json, statusCode }, binary: item.binary }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4160,
+        3584
+      ],
+      "id": "e0103fac-28ab-414f-95f4-4df86fff370e",
+      "name": "Normalize Response"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "route-auth",
+                    "leftValue": "={{ $json.statusCode }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "rightValue": 401
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Unauthorized Invalid Key"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "route-ok",
+                    "leftValue": "={{ $json.statusCode }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "rightValue": 200
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Success image generated"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "looseTypeValidation": true
+        }
+      },
+      "id": "8ae139b7-6ee7-490b-b345-da2b8db6f590",
+      "name": "Route Result",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        4352,
+        3568
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! 👋 Welcome to the AI Image Generator!\n\nType a prompt and I'll generate an image and send it to Telegram.\n\n*Example:* a futuristic cat on Mars 🚀",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        3264,
+        3744
+      ],
+      "id": "af9943b6-164b-4494-b899-aebf001b431e",
+      "name": "Chat Trigger",
+      "webhookId": "652d46a0-5337-45f5-a909-85f07f6e8e15"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send to Telegram": {
+      "main": [
+        [
+          {
+            "node": "Show image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Prompt": {
+      "main": [
+        [
+          {
+            "node": "Validate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Prompt": {
+      "main": [
+        [
+          {
+            "node": "Is Prompt Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Prompt Valid?": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Show Invalid Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Normalize Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Response": {
+      "main": [
+        [
+          {
+            "node": "Route Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Result": {
+      "main": [
+        [
+          {
+            "node": "API Key Checker",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Show Error ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "42cc9d74-407e-49e1-b3e4-0f188230f817",
+  "meta": {
+    "instanceId": "86484b1ec2809cba39f0dd32c88396bc04dac60c62c2950ba3c7725dce69bb46"
+  },
+  "id": "qcqxExfbcZmRHvBX",
+  "tags": []
+}
