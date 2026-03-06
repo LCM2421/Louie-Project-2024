@@ -28,18 +28,12 @@ function createDailyStandup() {
   var folderIdTest2 = '<YOUR_PUBLIC_GOOGLE_DOCS_ENPOINT>';
 
   // Create or get folders for each project
-  var folderOnlinePlatform = getOrCreateMonthFolder(folderIdOnlinePlatform, dateForDocs);
-  var folderSAPFightFire = getOrCreateMonthFolder(folderIdSAPFightFire, dateForDocs);
-  var folderAsiaSlot = getOrCreateMonthFolder(folderIdAsiaSlot, dateForDocs);
-  var folderSlotsEasyLink2 = getOrCreateMonthFolder(folderIdSlotsEasyLink2, dateForDocs);
-  var folderOnlineGame2SallyStore = getOrCreateMonthFolder(folderIdOnlineGame2SallyStore, dateForDocs);
+  var folderTest1 = getOrCreateMonthFolder(folderIdTest1, dateForDocs);
+  var folderTest2 = getOrCreateMonthFolder(folderIdTest2, dateForDocs);
 
-  if (folderOnlinePlatform && folderSAPFightFire && folderAsiaSlot && folderSlotsEasyLink2 && folderOnlineGame2SallyStore) {
-    createDocInFolder(folderOnlinePlatform, "Online Platform", dateString);
-    createDocInFolder(folderSAPFightFire, "SAP Fight Fire Reskin", dateString);
-    createDocInFolder(folderAsiaSlot, "Asian Slot - Dragons Fortune", dateString);
-    createDocInFolder(folderSlotsEasyLink2, "Slots - Easy Link 2", dateString);
-    createDocInFolder(folderOnlineGame2SallyStore, "Online Game 2 - Sally store", dateString);
+  if (folderTest1 && folderTest2) {
+    createDocInFolder(folderTest1, "Folder Test1", dateString);
+    createDocInFolder(folderTest2, "Folder Test2", dateString);
   }
 
   // Store the file IDs to lock in PropertiesService
