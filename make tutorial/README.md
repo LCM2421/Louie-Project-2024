@@ -411,38 +411,55 @@ You should see this in your browser:
 
 ---
 
-## 🔍 Key Differences from v3
+## ✅ See It In Action — Real Test Results
 
-If you built this from a previous version of this guide, here are the important changes:
+Here's proof the bot works end-to-end. These are real screenshots from a live test of this exact scenario.
 
-| What changed | Why |
-|---|---|
-| Groq module is now **native Groq** instead of HTTP | HTTP + JSON string mode breaks when file content has Windows line endings (`\r\n`) |
-| Telegram send modules use `application/x-www-form-urlencoded` | Prevents AI output (with special characters) from breaking JSON body |
-| `.cs` removed from Route 3 filter | `.cs` incorrectly matched `.csv` files, sending them to code review instead of data analysis |
-| Groq output reference is `G.result.choices[].message.content` | Native Groq module uses `.result.` — HTTP module used `.data.` |
+---
 
-## ✅ Example test for this scenario
+### 👋 Step 1 — Say hello to the group
 
-### Saying hello to the telegram group channel
+Send any message (not a file) to the group. The bot instantly recognises there's no file attached and sends a friendly welcome with instructions.
 
-<img width="416" height="248" alt="image" src="https://github.com/user-attachments/assets/cc21ede1-3b2e-462d-8a58-d55c0a3156d6" />
-<img width="1030" height="607" alt="image" src="https://github.com/user-attachments/assets/918ec543-9dcc-47f9-be4f-ec0c9a871824" />
+<img width="416" height="248" alt="Telegram welcome message trigger" src="https://github.com/user-attachments/assets/cc21ede1-3b2e-462d-8a58-d55c0a3156d6" />
+<img width="1030" height="607" alt="Make.com scenario execution for welcome route" src="https://github.com/user-attachments/assets/918ec543-9dcc-47f9-be4f-ec0c9a871824" />
 
-### Analysing the documentations
+> The Make.com history shows all 4 routes evaluated — Route 4 (welcome) fires because no file was attached.
 
-<img width="497" height="757" alt="image" src="https://github.com/user-attachments/assets/4ed10b19-65be-48f9-8b86-dba7983bb0dd" />
-<img width="1024" height="618" alt="image" src="https://github.com/user-attachments/assets/d7b229d1-4fec-4f7a-aaed-c6791206836d" />
+---
 
-### Data Reporting
+### 📄 Step 2 — Send a document for review
 
-<img width="489" height="776" alt="image" src="https://github.com/user-attachments/assets/d1e2cf67-bc49-46bc-8ab3-a6ac1c4046ae" />
-<img width="967" height="554" alt="image" src="https://github.com/user-attachments/assets/fb1079f9-d72e-4301-bcab-31795405f4d8" />
+Drop any `.txt`, `.md`, or `.pdf` file into the group. The bot responds with structured feedback — strengths, issues, suggestions, and an overall score.
 
-### Checking the code and give feedback how to fix it
+<img width="497" height="757" alt="Document feedback in Telegram" src="https://github.com/user-attachments/assets/4ed10b19-65be-48f9-8b86-dba7983bb0dd" />
+<img width="1024" height="618" alt="Make.com scenario execution for document route" src="https://github.com/user-attachments/assets/d7b229d1-4fec-4f7a-aaed-c6791206836d" />
 
-<img width="391" height="880" alt="image" src="https://github.com/user-attachments/assets/89967841-2e5e-4527-b0a4-795a52eb0d51" />
-<img width="1001" height="630" alt="image" src="https://github.com/user-attachments/assets/44a8912f-2a25-4727-a5cf-b3c2be1831f4" />
+> Route 1 fires. The bot analyses the document content and returns a formatted review in seconds.
+
+---
+
+### 📊 Step 3 — Send a data file for analysis
+
+Upload a `.csv`, `.tsv`, or `.json` file. The bot breaks down the columns, flags data quality issues, and suggests analysis ideas.
+
+<img width="489" height="776" alt="Data report in Telegram" src="https://github.com/user-attachments/assets/d1e2cf67-bc49-46bc-8ab3-a6ac1c4046ae" />
+<img width="967" height="554" alt="Make.com scenario execution for data route" src="https://github.com/user-attachments/assets/fb1079f9-d72e-4301-bcab-31795405f4d8" />
+
+> Route 2 fires. The AI reads the raw CSV and returns a column summary, data quality score, and analysis ideas — all automatically.
+
+---
+
+### 💻 Step 4 — Send code for review
+
+Send any `.py`, `.js`, `.ts`, or other code file. The bot acts as a senior engineer — it finds bugs, flags security issues, and even suggests a corrected code snippet.
+
+<img width="391" height="880" alt="Code review feedback in Telegram" src="https://github.com/user-attachments/assets/89967841-2e5e-4527-b0a4-795a52eb0d51" />
+<img width="1001" height="630" alt="Make.com scenario execution for code review route" src="https://github.com/user-attachments/assets/44a8912f-2a25-4727-a5cf-b3c2be1831f4" />
+
+> Route 3 fires. The bot identifies bugs with line numbers, security vulnerabilities, and provides a corrected code snippet — all within 10 seconds.
+
+---
 
 
 
