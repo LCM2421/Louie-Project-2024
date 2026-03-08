@@ -191,10 +191,17 @@ OVERALL SCORE: X/10
 | Field 1 Name | `chat_id` |
 | Field 1 Value | `YOUR_GROUP_CHAT_ID` |
 | Field 2 Name | `text` |
-| Field 2 Value | `📄 DOCUMENT FEEDBACK` + newline + `{{1.message.document.file_name}}` + newline + newline + `{{G.result.choices[].message.content}}` |
+| Field 2 Value | *(see below)* |
 | Parse response | Yes ✅ |
 
-> 💡 In the Field 2 Value box, press **Enter** on your keyboard for line breaks. Reference the Groq output as `{{G.result.choices[].message.content}}` where G is the Groq module number.
+**Field 2 Value — type this exactly, pressing Enter on your keyboard for line breaks:**
+```
+📄 DOCUMENT FEEDBACK
+{{1.message.document.file_name}}
+
+{{G.result.choices[].message.content}}
+```
+> 💡 Do NOT type `\n` or `+ newline +`. Press the actual **Enter key** between each line. Replace G with the Groq module number.
 
 ---
 
@@ -240,8 +247,14 @@ DATA QUALITY SCORE: X/10
 ```
 
 ### Module 5 — text change
-| Field 2 Value | `📊 DATA REPORT` + newline + `{{1.message.document.file_name}}` + newline + newline + `{{G.result.choices[].message.content}}` |
-|---|---|
+
+**Field 2 Value — type this exactly, pressing Enter on your keyboard for line breaks:**
+```
+📊 DATA REPORT
+{{1.message.document.file_name}}
+
+{{G.result.choices[].message.content}}
+```
 
 ### 🔀 Route 2 Filter
 
@@ -287,8 +300,14 @@ CODE SCORE: X/10
 **User message:** `Review {{1.message.document.file_name}}: {{substring(N.data; 0; 5000)}}`
 
 ### Module 5 — text change
-| Field 2 Value | `💻 CODE REVIEW` + newline + `{{1.message.document.file_name}}` + newline + newline + `{{G.result.choices[].message.content}}` |
-|---|---|
+
+**Field 2 Value — type this exactly, pressing Enter on your keyboard for line breaks:**
+```
+💻 CODE REVIEW
+{{1.message.document.file_name}}
+
+{{G.result.choices[].message.content}}
+```
 
 ### 🔀 Route 3 Filter
 
@@ -432,8 +451,8 @@ Send any message (not a file) to the group. The bot instantly recognises there's
 
 Drop any `.txt`, `.md`, or `.pdf` file into the group. The bot responds with structured feedback — strengths, issues, suggestions, and an overall score.
 
-<img width="497" height="757" alt="Document feedback in Telegram" src="https://github.com/user-attachments/assets/4ed10b19-65be-48f9-8b86-dba7983bb0dd" />
-<img width="1024" height="618" alt="Make.com scenario execution for document route" src="https://github.com/user-attachments/assets/d7b229d1-4fec-4f7a-aaed-c6791206836d" />
+<img width="488" height="754" alt="Document feedback in Telegram" src="https://github.com/user-attachments/assets/487e3998-35a3-4370-89de-064436a1747d" />
+<img width="1407" height="787" alt="Make.com scenario execution for document route" src="https://github.com/user-attachments/assets/f7556443-182b-42e1-ad6c-38d9a9b0653f" />
 
 > Route 1 fires. The bot analyses the document content and returns a formatted review in seconds.
 
@@ -443,8 +462,8 @@ Drop any `.txt`, `.md`, or `.pdf` file into the group. The bot responds with str
 
 Upload a `.csv`, `.tsv`, or `.json` file. The bot breaks down the columns, flags data quality issues, and suggests analysis ideas.
 
-<img width="489" height="776" alt="Data report in Telegram" src="https://github.com/user-attachments/assets/d1e2cf67-bc49-46bc-8ab3-a6ac1c4046ae" />
-<img width="967" height="554" alt="Make.com scenario execution for data route" src="https://github.com/user-attachments/assets/fb1079f9-d72e-4301-bcab-31795405f4d8" />
+<img width="496" height="775" alt="Data report in Telegram" src="https://github.com/user-attachments/assets/2142a558-297b-44dd-8cab-51a3e9cd96bb" />
+<img width="1399" height="798" alt="Make.com scenario execution for data route" src="https://github.com/user-attachments/assets/0aa86752-7e7d-4e25-9338-6eaeae3a074f" />
 
 > Route 2 fires. The AI reads the raw CSV and returns a column summary, data quality score, and analysis ideas — all automatically.
 
@@ -454,8 +473,8 @@ Upload a `.csv`, `.tsv`, or `.json` file. The bot breaks down the columns, flags
 
 Send any `.py`, `.js`, `.ts`, or other code file. The bot acts as a senior engineer — it finds bugs, flags security issues, and even suggests a corrected code snippet.
 
-<img width="391" height="880" alt="Code review feedback in Telegram" src="https://github.com/user-attachments/assets/89967841-2e5e-4527-b0a4-795a52eb0d51" />
-<img width="1001" height="630" alt="Make.com scenario execution for code review route" src="https://github.com/user-attachments/assets/44a8912f-2a25-4727-a5cf-b3c2be1831f4" />
+<img width="483" height="772" alt="Code review feedback in Telegram" src="https://github.com/user-attachments/assets/ce5db8fd-02b1-42df-ab97-c6389572300a" />
+<img width="1415" height="785" alt="Make.com scenario execution for code review route" src="https://github.com/user-attachments/assets/28ef2301-fb54-4a9f-9304-b03ac2c91fe1" />
 
 > Route 3 fires. The bot identifies bugs with line numbers, security vulnerabilities, and provides a corrected code snippet — all within 10 seconds.
 
