@@ -1,0 +1,61 @@
+employee_id,full_name,department,role,salary,hire_date,years_at_company,performance_score,is_remote,city,country,email
+EMP-1001,Employee 1,Engineering,DevOps Engineer,78400,2019-11-09,6.3,3.9,Yes,Singapore,Singapore,devopsengineer1@company.com
+EMP-1002,Employee 2,Marketing,Brand Manager,54800,2023-01-28,3.1,4.4,Yes,Jakarta,Indonesia,brandmanager2@company.com
+EMP-1003,Employee 3,HR,HRBP,50600,2018-01-13,8.2,4.9,YES,Davao,Philippines,hrbp3@company.com
+EMP-1004,Employee 4,Finance,Financial Analyst,71000,2019-03-26,7.0,3.2,Yes,Singapore,Singapore,financialanalyst4@company.com
+EMP-1005,Employee 5,Finance,Controller,76900,2021-10-22,4.4,4.5,No,Jakarta,Indonesia,controller5@company.com
+EMP-1006,Employee 6,Finance,Financial Analyst,75400,2020-12-29,5.2,2.6,no,Singapore,Singapore,financialanalyst6@company.com
+EMP-1007,Employee 7,HR,HR Coordinator,37800,2021-08-09,4.6,3.6,No,Singapore,Singapore,hrcoordinator7@company.com
+EMP-1008,Employee 8,Engineering,Tech Lead,77400,2019-11-02,6.4,3.0,yes,Davao,Philippines,techlead8@company.com
+EMP-1009,Employee 9,Finance,Controller,79600,2023-05-03,2.8,4.6,Yes,Davao,Philippines,controller9@company.com
+EMP-1010,Employee 10,Finance,Accountant,79500,2021-01-09,5.2,2.6,No,Davao,Philippines,accountant10@company.com
+EMP-1011,Employee 11,Operations,Operations Analyst,70600,2023-05-15,2.8,4.1,No,Manila,Philippines,operationsanalyst11@company.com
+EMP-1012,Employee 12,Marketing,Marketing Analyst,62400,2018-11-09,7.3,3.1,Yes,Singapore,Singapore,marketinganalyst12@company.com
+EMP-1013,Employee 13,HR,Recruiter,50200,2021-12-03,4.3,3.1,No,Davao,Philippines,recruiter13@company.com
+EMP-1014,Employee 14,HR,HR Coordinator,60500,2022-08-05,3.6,2.9,Yes,Davao,Philippines,hrcoordinator14@company.com
+EMP-1015,Employee 15,HR,HR Coordinator,,2021-03-25,5.0,4.2,YES,Singapore,Singapore,hrcoordinator15@company.com
+EMP-1016,Employee 16,Operations,Project Manager,47500,2021-04-27,4.9,4.2,No,Jakarta,Indonesia,projectmanager16@company.com
+EMP-1017,Employee 17,Engineering,Tech Lead,92900,2021-11-02,4.3,4.0,no,Manila,Philippines,techlead17@company.com
+EMP-1018,Employee 18,Engineering,Tech Lead,82500,2020-05-27,5.8,4.2,no,Manila,Philippines,techlead18@company.com
+EMP-1019,Employee 19,Operations,Ops Lead,45400,2022-10-06,3.4,3.6,Yes,Singapore,Singapore,opslead19@company.com
+EMP-1020,Employee 20,Finance,Controller,75800,2022-12-31,3.2,4.6,No,Jakarta,Indonesia,controller20@company.com
+EMP-1021,Employee 21,Finance,Financial Analyst,79000,2020-12-04,5.3,4.9,no,Davao,Philippines,financialanalyst21@company.com
+EMP-1022,Employee 22,HR,HRBP,50200,2020-06-11,5.7,4.6,yes,Kuala Lumpur,Malaysia,hrbp22@company.com
+EMP-1023,Employee 23,Sales,Account Manager,65200,2023-03-30,2.9,2.7,No,Singapore,Singapore,accountmanager23@company.com
+EMP-1024,Employee 24,Finance,CFO,66000,2018-02-28,8.0,3.7,No,Davao,Philippines,cfo24@company.com
+EMP-1025,Employee 25,Finance,Financial Analyst,66600,2022-06-22,3.7,3.1,no,Davao,Philippines,financialanalyst25@company.com
+EMP-1026,Employee 26,Operations,Ops Lead,63200,2018-01-21,8.1,3.8,Yes,Cebu,Philippines,opslead26@company.com
+EMP-1027,Employee 27,Marketing,Brand Manager,58000,2021-02-11,5.1,4.4,YES,Jakarta,Indonesia,brandmanager27@company.com
+EMP-1028,Employee 28,Operations,COO,59700,2022-06-12,3.7,2.5,No,Davao,Philippines,coo28@company.com
+EMP-1029,Employee 29,Finance,Financial Analyst,65000,2021-09-21,4.5,4.0,no,Singapore,Singapore,financialanalyst29@company.com
+EMP-1030,Employee 30,HR,HR Manager,999999,2022-03-08,4.0,3.9,YES,Davao,Philippines,hrmanager30@company.com
+EMP-1031,Employee 31,Sales,Sales Lead,46200,2019-04-18,6.9,2.8,yes,Cebu,Philippines,saleslead31@company.com
+EMP-1032,Employee 32,Engineering,Senior Dev,71300,2019-03-20,7.0,4.3,no,Davao,Philippines,seniordev32@company.com
+EMP-1033,Employee 33,HR,HR Manager,38300,2022-09-02,3.5,3.0,yes,Cebu,Philippines,hrmanager33@company.com
+EMP-1034,Employee 34,Marketing,SEO Specialist,42500,2021-12-21,4.2,3.8,Yes,Davao,Philippines,seospecialist34@company.com
+EMP-1035,Employee 35,Engineering,Tech Lead,87900,2023-04-18,2.9,2.8,Yes,Singapore,Singapore,techlead35@company.com
+EMP-1036,Employee 36,Engineering,Tech Lead,80400,2020-09-07,5.5,3.6,Yes,Cebu,Philippines,techlead36@company.com
+EMP-1037,Employee 37,Sales,BDR,41700,2022-08-11,3.6,2.7,Yes,Singapore,Singapore,bdr37@company.com
+EMP-1038,Employee 38,HR,HR Coordinator,40000,2018-11-02,7.4,4.5,Yes,Davao,Philippines,hrcoordinator38@company.com
+EMP-1039,Employee 39,Marketing,Marketing Analyst,60300,2022-04-15,3.9,3.5,no,Kuala Lumpur,Malaysia,marketinganalyst39@company.com
+EMP-1040,Employee 40,Marketing,Brand Manager,56800,2023-02-04,3.1,3.6,YES,Kuala Lumpur,Malaysia,brandmanager40@company.com
+EMP-1041,Employee 41,Sales,Sales Rep,58000,2023-05-21,2.8,4.4,No,Cebu,Philippines,salesrep41@company.com
+EMP-1042,Employee 42,Sales,Sales Rep,43100,2019-05-07,6.8,2.9,No,Manila,Philippines,salesrep42@company.com
+EMP-1043,Employee 43,Engineering,DevOps Engineer,79800,2021-11-12,4.3,4.0,Yes,Davao,Philippines,devopsengineer43@company.com
+EMP-1044,Employee 44,Marketing,SEO Specialist,65200,2019-08-03,6.6,4.3,Yes,Singapore,Singapore,seospecialist44@company.com
+EMP-1045,Employee 45,Operations,Project Manager,,2022-06-02,3.8,4.5,No,Kuala Lumpur,Malaysia,projectmanager45@company.com
+EMP-1046,Employee 46,Finance,Accountant,72800,2019-04-06,6.9,4.1,No,Davao,Philippines,accountant46@company.com
+EMP-1047,Employee 47,Engineering,Junior Dev,70400,2022-06-12,3.7,3.3,no,Jakarta,Indonesia,juniordev47@company.com
+EMP-1048,Employee 48,Sales,BDR,42100,2020-08-17,5.6,4.2,YES,Jakarta,Indonesia,bdr48@company.com
+EMP-1049,Employee 49,Sales,BDR,52300,2018-06-14,7.7,4.0,yes,Singapore,Singapore,bdr49@company.com
+EMP-1050,Employee 50,HR,HR Manager,35800,2018-07-07,7.7,3.1,no,Jakarta,Indonesia,hrmanager50@company.com
+EMP-1051,Employee 51,HR,HR Coordinator,60100,2021-10-08,4.4,4.6,Yes,Kuala Lumpur,Malaysia,hrcoordinator51@company.com
+EMP-1052,Employee 52,Marketing,Brand Manager,59000,2021-08-27,4.5,3.6,No,Davao,Philippines,brandmanager52@company.com
+EMP-1053,Employee 53,HR,HRBP,55800,2022-07-26,3.6,3.7,YES,Manila,Philippines,hrbp53@company.com
+EMP-1054,Employee 54,Sales,BDR,48900,2019-10-20,6.4,4.2,yes,Cebu,Philippines,bdr54@company.com
+EMP-1055,Employee 55,Finance,CFO,64400,2021-09-18,4.5,4.9,Yes,Kuala Lumpur,Malaysia,cfo55@company.com
+EMP-1056,Employee 56,Finance,Accountant,65300,2019-06-01,6.8,3.3,no,Singapore,Singapore,accountant56@company.com
+EMP-1057,Employee 57,Engineering,DevOps Engineer,78500,2018-04-22,7.9,3.0,no,Davao,Philippines,devopsengineer57@company.com
+EMP-1058,Employee 58,Finance,CFO,79900,2018-04-16,7.9,3.0,No,Kuala Lumpur,Malaysia,cfo58@company.com
+EMP-1059,Employee 59,Sales,BDR,66900,2021-12-01,4.3,3.7,no,Manila,Philippines,bdr59@company.com
+EMP-1060,Employee 60,Marketing,Content Writer,,2021-02-02,5.1,2.5,Yes,Singapore,Singapore,contentwriter60@company.com
