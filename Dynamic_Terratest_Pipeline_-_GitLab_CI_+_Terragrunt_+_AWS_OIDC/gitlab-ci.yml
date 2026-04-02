@@ -1,0 +1,197 @@
+# .gitlab-ci.yml
+# Dynamic Terratest pipeline — only tests the Terraform modules that actually
+# changed in the current merge request.  Modules are auto-discovered via git
+# diff, so no manual list needs to be maintained.
+
+stages:
+  - git-diff
+  - validate
+  - test
+  - destroy
+
+variables:
+  TF_VERSION: "1.14.8"
+  TG_VERSION: "1.0.0"
+  # Each pipeline tags its resources with a unique prefix to allow safe
+  # parallel runs across multiple open MRs.
+  TEST_PREFIX: "ci-${CI_PIPELINE_ID}"
+
+# ---------------------------------------------------------------------------
+# Reusable base template
+# ---------------------------------------------------------------------------
+.base:
+  image: golang:1.24
+  cache:
+    key:
+      files:
+        - test/go.sum
+    paths:
+      - $GOPATH/pkg/mod
+    policy: pull-push
+  before_script:
+    - apt-get update -qq && apt-get install -y wget unzip git
+
+    # Install Terraform
+    - wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+    - unzip -q terraform_${TF_VERSION}_linux_amd64.zip && mv terraform /usr/local/bin/
+
+    # Install Terragrunt
+    - wget -q https://github.com/gruntwork-io/terragrunt/releases/download/v${TG_VERSION}/terragrunt_linux_amd64
+    - chmod +x terragrunt_linux_amd64 && mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+    # Pre-download Go module dependencies (cached across jobs)
+    - cd test && go mod download
+
+# ---------------------------------------------------------------------------
+# Stage 1 — git-diff
+# Detects which Terraform modules changed and exports two variables:
+#   TF_CHANGED      — "true" / "false"
+#   CHANGED_MODULES — space-separated list of module directory names
+#                     e.g. "aws_ec2 aws_secretsmanager"
+# ---------------------------------------------------------------------------
+git-diff:
+  stage: git-diff
+  image: alpine/git:latest
+  script:
+    - |
+      git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+
+      # Collect every changed *.tf / *.hcl file path.
+      CHANGED_FILES=$(git diff --name-only \
+        origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}...HEAD \
+        -- 'modules/**' 'infra/**' '*.tf' '*.hcl')
+
+      if [ -z "$CHANGED_FILES" ]; then
+        echo "No Terraform changes detected — skipping pipeline."
+        echo "TF_CHANGED=false"      >> build.env
+        echo "CHANGED_MODULES="      >> build.env
+        exit 0
+      fi
+
+      echo "=========================================="
+      echo "  Changed Terraform files:"
+      echo "------------------------------------------"
+      echo "$CHANGED_FILES"
+      echo "=========================================="
+
+      # Extract unique module names from paths like:
+      #   modules/aws_ec2/main.tf          → aws_ec2
+      #   infra/dev/aws_secretsmanager/... → aws_secretsmanager
+      # We look for the first path component that matches known module patterns.
+      MODULES=$(echo "$CHANGED_FILES" \
+        | grep -oE '(modules|infra/[^/]+)/([^/]+)' \
+        | awk -F'/' '{print $NF}' \
+        | sort -u \
+        | tr '\n' ' ' \
+        | sed 's/ $//')
+
+      echo "Detected modules: $MODULES"
+      echo "TF_CHANGED=true"              >> build.env
+      echo "CHANGED_MODULES=$MODULES"     >> build.env
+  artifacts:
+    reports:
+      # dotenv makes TF_CHANGED and CHANGED_MODULES available to all
+      # downstream jobs without any extra configuration.
+      dotenv: build.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# ---------------------------------------------------------------------------
+# Stage 2 — validate
+# Runs `terragrunt run-all validate` on every changed module directory.
+# Fast feedback — no real AWS resources are created.
+# ---------------------------------------------------------------------------
+validate:
+  extends: .base
+  stage: validate
+  needs:
+    - job: git-diff
+      artifacts: true
+  script:
+    - |
+      echo "Validating modules: $CHANGED_MODULES"
+      for MOD in $CHANGED_MODULES; do
+        echo "--- Validating infra/dev/$MOD ---"
+        terragrunt run-all validate --terragrunt-working-dir "infra/dev/$MOD"
+      done
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $TF_CHANGED == "true"
+
+# ---------------------------------------------------------------------------
+# Stage 3 — terratest
+# Deploys real resources, asserts outputs, then defers destroy to the next
+# stage (so destroy runs even if assertions fail).
+# ---------------------------------------------------------------------------
+terratest:
+  extends: .base
+  stage: test
+  needs:
+    - job: git-diff
+      artifacts: true
+    - job: validate
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  script:
+    - |
+      # Exchange the GitLab OIDC token for short-lived AWS credentials.
+      eval $(aws sts assume-role-with-web-identity \
+        --role-arn "${AWS_ROLE_ARN}" \
+        --role-session-name "gitlab-terratest-${CI_PIPELINE_ID}" \
+        --web-identity-token "${AWS_OIDC_TOKEN}" \
+        --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+        --output text \
+        | awk '{
+            print "export AWS_ACCESS_KEY_ID="$1
+            print "export AWS_SECRET_ACCESS_KEY="$2
+            print "export AWS_SESSION_TOKEN="$3
+          }')
+
+      echo "Running Terratest for modules: $CHANGED_MODULES"
+      # Pass CHANGED_MODULES into the test binary so discoverChangedModules()
+      # can read it at runtime.
+      cd test && go test -v \
+        -run TestChangedModules \
+        -timeout 60m \
+        -parallel 4 \
+        ./...
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $TF_CHANGED == "true"
+
+# ---------------------------------------------------------------------------
+# Stage 4 — destroy
+# Guaranteed cleanup.  Runs even if the terratest job fails, preventing
+# orphaned (and billing!) AWS resources from accumulating.
+# ---------------------------------------------------------------------------
+destroy:
+  extends: .base
+  stage: destroy
+  needs:
+    - job: git-diff
+      artifacts: true
+    - job: terratest
+  id_tokens:
+    AWS_OIDC_TOKEN:
+      aud: https://gitlab.com
+  script:
+    - |
+      eval $(aws sts assume-role-with-web-identity \
+        --role-arn "${AWS_ROLE_ARN}" \
+        --role-session-name "gitlab-destroy-${CI_PIPELINE_ID}" \
+        --web-identity-token "${AWS_OIDC_TOKEN}" \
+        --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+        --output text \
+        | awk '{
+            print "export AWS_ACCESS_KEY_ID="$1
+            print "export AWS_SECRET_ACCESS_KEY="$2
+            print "export AWS_SESSION_TOKEN="$3
+          }')
+
+      echo "Destroying modules: $CHANGED_MODULES"
+      cd test && go test -v \
+        -run TestCleanup \
+        -timeout 30m \
+        ./...
+  when: always   # <-- critical: runs even when terratest fails
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $TF_CHANGED == "true"
